@@ -1,11 +1,7 @@
-use crate::position_marker::find_marker;
+use crate::find_marker::find_marker;
 
-mod position_marker;
-use std::fs;
+mod find_marker;
 
 fn main() {
-    let file = fs::read_to_string("./input.txt").unwrap();
-
-     find_marker(&file);
+    dbg!(find_marker(include_str!("input.txt")));
 }
-
