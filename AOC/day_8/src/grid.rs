@@ -12,6 +12,7 @@ pub fn to_num(c: char) -> Result<u32, MyError> {
     }
 }
 
+
 pub fn create_grid(input: &str) -> Result<Vec<Vec<u32>>, MyError> {
     let mut grid = vec![];
 
@@ -22,8 +23,21 @@ pub fn create_grid(input: &str) -> Result<Vec<Vec<u32>>, MyError> {
             .collect::<Result<Vec<u32>, MyError>>()?;
         grid.push(row);
     }
+
+    grid_iterator(&grid);
+
+
     println!("{:?}", grid);
     Ok(grid)
+}
+
+pub fn grid_iterator(grid: &Vec<Vec<u32>>)   {
+    for (x) in 0..grid[0].len() {
+        for (y) in 0..grid.len() {
+            println!("x: {}, y: {}, value: {}", x, y, grid[x][y]);
+        }
+    }
+
 }
 
 
