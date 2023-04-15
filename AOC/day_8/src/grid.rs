@@ -1,4 +1,3 @@
-
 #[derive(Debug, PartialEq)]
 pub enum MyError {
     InvalidDigit(char),
@@ -35,9 +34,9 @@ pub fn grid_iterator(grid: &Vec<Vec<u32>>) {
     //and top to bottom and bottom to top and we set the value to false
     // if we encounter a tree that;s higher then the current tree
 
-    let mut visible_trees:Vec<Vec<bool>> = vec![vec![false; grid[0].len()]; grid.len()];
+    let mut visible_trees: Vec<Vec<bool>> = vec![vec![false; grid[0].len()]; grid.len()];
 
-visible_trees = iterate_x_axis_left_to_right(&grid, &mut visible_trees);
+    visible_trees = iterate_x_axis_left_to_right(&grid, &mut visible_trees);
     visible_trees = iterate_x_axis_right_to_left(&grid, &mut visible_trees);
     println!("visible trees: {:?}", visible_trees);
 }
@@ -48,15 +47,14 @@ pub fn iterate_x_axis_left_to_right(grid: &Vec<Vec<u32>>, visible_trees: &mut Ve
         let mut previous_tree_height = 0;
         for row in 0..grid[0].len() {
             if row == 0 {
-                println!("new row");
                 previous_tree_height = grid[col][row];
                 visible_trees[col][row] = true;
             } else if grid[col][row] > previous_tree_height {
                 visible_trees[col][row] = true;
-                println!(
-                    "col: {}, row: {}, previous tree height: {}",
-                    col, row, previous_tree_height
-                );
+                // println!(
+                //     "col: {}, row: {}, previous tree height: {}",
+                //     col, row, previous_tree_height
+                // );
                 previous_tree_height = grid[col][row];
             }
         }
@@ -87,8 +85,6 @@ pub fn iterate_x_axis_right_to_left(grid: &Vec<Vec<u32>>, visible_trees: &mut Ve
 }
 
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -98,5 +94,22 @@ mod tests {
         let input = '4';
         let result = to_num(input);
         assert_eq!(result, Ok(4))
+    }
+
+    #[test]
+    fn test_iterate_x_axis_left_to_right() {
+        let input = vec![
+            vec![1, 2, 3],
+            vec![4, 5, 3],
+            vec![7, 8, 9],
+        ];
+
+        let mut visible_trees = vec![vec![false; input[0].len()]; input.len()];
+
+        let result = iterate_x_axis_left_to_right(&input, &mut visible_trees);
+        let expected = vec![vec![true, true, true], vec![true, true, false], vec![true, true, true]];
+        assert_eq!(
+            result,expected
+        )
     }
 }
