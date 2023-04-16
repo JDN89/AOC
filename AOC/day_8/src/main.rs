@@ -4,6 +4,7 @@ mod grid;
 
         let input =  read_input().unwrap();
         grid::create_grid(&input);
+
     }
 
     fn read_input() -> Result<String,std::io::Error> {

@@ -13,7 +13,7 @@ pub fn to_num(c: char) -> Result<u32, MyError> {
 }
 
 
-pub fn create_grid(input: &str) -> Result<Vec<Vec<u32>>, MyError> {
+pub fn create_grid(input: &str) -> Result<u32, MyError> {
     let mut grid = vec![];
 
     for line in input.lines() {
@@ -24,11 +24,13 @@ pub fn create_grid(input: &str) -> Result<Vec<Vec<u32>>, MyError> {
         grid.push(row);
     }
 
-    grid_iterator(&grid);
-    Ok(grid)
+    let visibile_trees = grid_iterator(&grid);
+    let result = visibile_trees.iter().flatten().filter(|&&x| x == true).count() as u32;
+    println!("result: {}", result);
+    Ok(result)
 }
 
-pub fn grid_iterator(grid: &Vec<Vec<u32>>) {
+pub fn grid_iterator(grid: &Vec<Vec<u32>>) -> Vec<Vec<bool>> {
     //create a Vec<Vec<boolean>> where alle the values are set to true
     //later we loop over the vec from left to right and right to left
     //and top to bottom and bottom to top and we set the value to false
@@ -38,7 +40,10 @@ pub fn grid_iterator(grid: &Vec<Vec<u32>>) {
 
     visible_trees = iterate_x_axis_left_to_right(&grid, &mut visible_trees);
     visible_trees = iterate_x_axis_right_to_left(&grid, &mut visible_trees);
+    visible_trees = iterate_y_axis_top_to_bottom(&grid, &mut visible_trees);
+    visible_trees = iterate_y_axis_bottom_to_top(&grid, &mut visible_trees);
     println!("visible trees: {:?}", visible_trees);
+    visible_trees
 }
 
 
@@ -68,7 +73,7 @@ pub fn iterate_x_axis_right_to_left(grid: &Vec<Vec<u32>>, visible_trees: &mut Ve
         for row in (0..grid[0].len()).rev() {
             // we're counting in reverse order
             if row == grid[0].len() - 1 {
-                println!("new row");
+                // println!("new row");
                 previous_tree_height = grid[col][row];
                 visible_trees[col][row] = true;
             } else if grid[col][row] > previous_tree_height {
@@ -88,10 +93,10 @@ pub fn iterate_y_axis_top_to_bottom(grid: &Vec<Vec<u32>>, visible_trees: &mut Ve
     for row in 0..grid[0].len() {
         let mut previous_tree_height = 0;
         for col in 0..grid.len() {
-            println!("col: {}, row: {},previous tree height {},current tree height {}", col, row, previous_tree_height, grid[col][row]);
+            // println!("col: {}, row: {},previous tree height {},current tree height {}", col, row, previous_tree_height, grid[col][row]);
             // we're counting in reverse order
             if col == 0 {
-                println!("new col");
+                // println!("new col");
                 previous_tree_height = grid[col][row];
                 visible_trees[col][row] = true;
             } else if grid[col][row] > previous_tree_height {
@@ -111,10 +116,10 @@ pub fn iterate_y_axis_bottom_to_top(grid: &Vec<Vec<u32>>, visible_trees: &mut Ve
     for row in (0..grid[0].len()).rev() {
         let mut previous_tree_height = 0;
         for col in (0..grid.len()).rev() {
-            println!("col: {}, row: {},previous tree height {},current tree height {}", col, row, previous_tree_height, grid[col][row]);
+            // println!("col: {}, row: {},previous tree height {},current tree height {}", col, row, previous_tree_height, grid[col][row]);
             // we're counting in reverse order
             if col == grid.len() - 1 {
-                println!("new col: {}", col);
+                // println!("new col: {}", col);
                 previous_tree_height = grid[col][row];
                 visible_trees[col][row] = true;
             } else if grid[col][row] > previous_tree_height {
