@@ -4,29 +4,26 @@ pub enum MyError {
 }
 
 pub fn to_num(c: char) -> Result<u32, MyError> {
-    match c.to_digit(10)
-
-    {
-        Some(value) => Ok(value),
-        None => Err(MyError::InvalidDigit(c)),
-    }
+    c.to_digit(10).ok_or(MyError::InvalidDigit(c))
 }
 
 
 pub fn create_grid(input: &str) -> Result<u32, MyError> {
-    let mut grid = vec![];
+    let grid: Result<Vec<Vec<u32>>, _> = input
+        .lines()
+        .map(|line| line.chars().map(to_num).collect())
+        .collect();
 
-    for line in input.lines() {
-        let row = line
-            .chars()
-            .map(to_num)
-            .collect::<Result<Vec<u32>, MyError>>()?;
-        grid.push(row);
-    }
-
-    let visibile_trees = grid_iterator(&grid);
-    let result = visibile_trees.iter().flatten().filter(|&&x| x == true).count() as u32;
-    println!("result: {}", result);
+    // The line let grid = grid?; is using the question mark operator (?) to perform error propagation.
+    // It checks if the grid variable contains a Result variant with an error (i.e., Err).
+    // If it does, the function immediately returns with that error.
+    // If the grid variable contains an Ok variant, the line extracts the value inside the Ok variant and rebinds it to the grid variable.
+    // In the context of the code you provided, the grid variable is a Result<Vec<Vec<u32>>, MyError>.
+    // If the Result is an Err variant, the create_grid function returns early with the Err.
+    // If it is an Ok variant, the grid variable now contains the value Vec<Vec<u32>>, which can be used later in the function.
+    let grid = grid?;
+    let visible_trees = grid_iterator(&grid);
+    let result = visible_trees.iter().flatten().filter(|&&x| x).count() as u32;
     Ok(result)
 }
 
@@ -42,7 +39,7 @@ pub fn grid_iterator(grid: &Vec<Vec<u32>>) -> Vec<Vec<bool>> {
     visible_trees = iterate_x_axis_right_to_left(&grid, &mut visible_trees);
     visible_trees = iterate_y_axis_top_to_bottom(&grid, &mut visible_trees);
     visible_trees = iterate_y_axis_bottom_to_top(&grid, &mut visible_trees);
-    println!("visible trees: {:?}", visible_trees);
+    // println!("visible trees: {:?}", visible_trees);
     visible_trees
 }
 
