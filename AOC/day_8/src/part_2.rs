@@ -2,6 +2,7 @@
 pub enum MyError {
     InvalidDigit(char),
 }
+
 #[derive(Debug, PartialEq)]
 pub enum ScenicScoreError {
     InvalidInput(String),
@@ -12,23 +13,18 @@ pub fn to_num(c: char) -> Result<u32, MyError> {
 }
 
 
-pub fn create_grid(input: &str) -> Result<u32, MyError> {
+pub fn create_grid(input: &str) -> Result<u32, ScenicScoreError> {
     let grid: Result<Vec<Vec<u32>>, _> = input
         .lines()
         .map(|line| line.chars().map(to_num).collect())
         .collect();
 
-    let grid = grid?;
-     let result =  grid_iterator(&grid);
-    todo!()
+    let grid = grid.map_err(|_| ScenicScoreError::InvalidInput("Invalid input".to_string()))?;
+    grid_iterator(&grid)
 }
 
 pub fn grid_iterator(grid: &Vec<Vec<u32>>) -> Result<u32, ScenicScoreError> {
-    let mut score = vec![0; 4];
-
-    find_highest_scenic_score(&grid);
-    todo!()
-
+    find_highest_scenic_score(&grid)
 }
 
 pub fn find_highest_scenic_score(grid: &Vec<Vec<u32>>) -> Result<u32, ScenicScoreError> {
@@ -43,7 +39,7 @@ pub fn find_highest_scenic_score(grid: &Vec<Vec<u32>>) -> Result<u32, ScenicScor
             // if so -> add to score
             //start at index + 1 because the tree at the edge  does'nt see anything
 
-            for x in (row_index + 1 ) ..row_max_size  {
+            for x in (row_index + 1)..row_max_size {
                 // row_index omdat je pas vanaf die positie in de array naar rechts moet beginnen tellen
                 let tree_to_the_right = grid[col_index][x];
                 if tree_house_height > &tree_to_the_right {
@@ -57,7 +53,7 @@ pub fn find_highest_scenic_score(grid: &Vec<Vec<u32>>) -> Result<u32, ScenicScor
             }
             // println!("col: {}, row: {},tree_house_height: {},", col, row, tree_house_height);
 
-            for x in (0..row_index).rev()  {
+            for x in (0..row_index).rev() {
                 let tree_to_the_left = grid[col_index][x];
                 if tree_house_height > &tree_to_the_left {
                     score[1] += 1;
@@ -70,7 +66,7 @@ pub fn find_highest_scenic_score(grid: &Vec<Vec<u32>>) -> Result<u32, ScenicScor
             }
 
             // to top
-            for y in (0..col_index).rev()  {
+            for y in (0..col_index).rev() {
                 let tree_above = grid[y][row_index];
                 if tree_house_height > &tree_above {
                     score[2] += 1;
@@ -83,7 +79,7 @@ pub fn find_highest_scenic_score(grid: &Vec<Vec<u32>>) -> Result<u32, ScenicScor
             }
 
             // to top
-            for y in (col_index+1) .. grid.len() {
+            for y in (col_index + 1)..grid.len() {
                 let tree_above = grid[y][row_index];
                 if tree_house_height > &tree_above {
                     score[3] += 1;
@@ -94,7 +90,7 @@ pub fn find_highest_scenic_score(grid: &Vec<Vec<u32>>) -> Result<u32, ScenicScor
                     break;
                 }
             }
-            let scenic_score : u32= score.iter().product();
+            let scenic_score: u32 = score.iter().product();
             if scenic_score > heighest_scenic_score {
                 heighest_scenic_score = scenic_score;
             }
