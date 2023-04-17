@@ -1,5 +1,6 @@
 mod part1;
 mod part_2;
+mod part_2_refactored;
 
 fn main() {
     let input = read_input().unwrap();
@@ -7,13 +8,13 @@ fn main() {
     //     Ok(value) => println!("{:?}", value),
     //     Err(e) => println!("{:?}", e)
     // }
-    match part_2::create_grid(&input) {
+    match part_2_refactored::create_grid(&input) {
         Ok(value) => println!("{:?}", value),
         Err(e) => println!("{:?}", e)
     }
 }
 
 fn read_input() -> Result<String, std::io::Error> {
-    Ok(std::fs::read_to_string("src/test.txt")?)
-    // Ok(std::fs::read_to_string("src/part1.txt")?)
+    // Ok(std::fs::read_to_string("src/test.txt")?)
+    Ok(std::fs::read_to_string("src/part1.txt")?)
 }
