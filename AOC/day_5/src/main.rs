@@ -1,6 +1,6 @@
 use nom::combinator::all_consuming;
 use nom::Finish;
-use crate::parse::{parse_row, receive_input, transpose_rev};
+use crate::parse::{parse_row, transpose_rev};
 
 mod parse;
 

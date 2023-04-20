@@ -1,7 +1,13 @@
-use nom::{bytes::complete::tag, character::complete::anychar, Finish, IResult, Parser, sequence::delimited};
-use nom::branch::alt;
-use nom::combinator::{all_consuming, map};
-use nom::multi::{separated_list0, separated_list1};
+use nom::{
+    IResult,
+    Finish,
+    character::complete::anychar,
+    bytes::complete::tag,
+    sequence::delimited,
+    branch::alt,
+    combinator::{all_consuming, map},
+    multi::separated_list1
+};
 use std::iter::Iterator;
 
 pub fn parse_crate(input: &str) -> IResult<&str, char> {
@@ -21,23 +27,6 @@ pub fn parse_crate_or_hole(input: &str) -> IResult<&str, Option<char>> {
 
 pub fn parse_row(input: &str) -> IResult<&str, Vec<Option<char>>> {
     separated_list1(tag(" "), parse_crate_or_hole)(input)
-}
-
-pub fn receive_input(input: &str) {
-    let crate_lines: Vec<_> = input.lines().by_ref()
-        .map_while(|line| {
-            all_consuming(parse_row)(line)
-                .finish()
-                .ok()
-                .map(|(_, line)| line)
-        })
-        .collect();
-
-    println!("{:?}", crate_lines);
-
-    let crate_columns = transpose_rev(crate_lines);
-
-    println!("{:?}", crate_columns);
 }
 
 // renamed to 👇 better indicate functionality
@@ -60,12 +49,6 @@ pub fn transpose_rev<T>(v: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_receive_input() {
-        let input = "FBFBBFFRLR";
-        receive_input(&input);
-    }
 
     #[test]
     fn test_parse_crate_success() {
