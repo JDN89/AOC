@@ -1,11 +1,10 @@
 use nom::{
     IResult,
-    Finish,
     character::complete::anychar,
     bytes::complete::tag,
     sequence::delimited,
     branch::alt,
-    combinator::{all_consuming, map},
+    combinator::{map},
     multi::separated_list1
 };
 use std::iter::Iterator;
