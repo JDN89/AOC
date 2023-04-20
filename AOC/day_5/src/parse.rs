@@ -29,7 +29,6 @@ pub fn parse_row(input: &str) -> IResult<&str, Vec<Option<char>>> {
     separated_list1(tag(" "), parse_crate_or_hole)(input)
 }
 
-// renamed to 👇 better indicate functionality
 pub fn transpose_rev<T>(v: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
     assert!(!v.is_empty());
     let len = v[0].len();
@@ -38,9 +37,8 @@ pub fn transpose_rev<T>(v: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
         .map(|_| {
             iters
                 .iter_mut()
-                // 👇
                 .rev()
-                .filter_map(|n| n.next().unwrap())
+                .filter_map(|n| n.next().and_then(|opt| opt))
                 .collect::<Vec<T>>()
         })
         .collect()

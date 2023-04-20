@@ -7,7 +7,9 @@ mod parse;
 fn main() {
     let mut lines = include_str!("test.txt").lines();
 
-    let crate_lines: Vec<_> = (&mut lines)
+    let crate_lines: Vec<_> = lines
+        // 👇
+        .by_ref()
         .map_while(|line| {
             all_consuming(parse_row)(line)
                 .finish()
@@ -19,4 +21,10 @@ fn main() {
     for col in &crate_columns {
         println!("{col:?}");
     }
+    //todo parse pile numbers
+    //todo parse empty line
+    //todo parse instructions and put into struct
+
+    // we've consumed the "numbers line" but not the separating line
+    // assert!(lines.next().unwrap().is_empty());
 }
