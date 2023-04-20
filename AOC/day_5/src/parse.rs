@@ -1,7 +1,8 @@
-use nom::{bytes::complete::tag, character::complete::anychar, IResult, Parser, sequence::delimited};
+use nom::{bytes::complete::tag, character::complete::anychar, Finish, IResult, Parser, sequence::delimited};
 use nom::branch::alt;
-use nom::combinator::map;
+use nom::combinator::{all_consuming, map};
 use nom::multi::{separated_list0, separated_list1};
+use std::iter::Iterator;
 
 pub fn parse_crate(input: &str) -> IResult<&str, char> {
     delimited(tag("["), anychar, tag("]"))(input)
@@ -23,9 +24,37 @@ pub fn parse_row(input: &str) -> IResult<&str, Vec<Option<char>>> {
 }
 
 pub fn receive_input(input: &str) {
-    input.lines().for_each(|line| {
-        println!("{:?}", line);
-    });
+    let crate_lines: Vec<_> = input.lines().by_ref()
+        .map_while(|line| {
+            all_consuming(parse_row)(line)
+                .finish()
+                .ok()
+                .map(|(_, line)| line)
+        })
+        .collect();
+
+    println!("{:?}", crate_lines);
+
+    let crate_columns = transpose_rev(crate_lines);
+
+    println!("{:?}", crate_columns);
+}
+
+// renamed to 👇 better indicate functionality
+pub fn transpose_rev<T>(v: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
+    assert!(!v.is_empty());
+    let len = v[0].len();
+    let mut iters: Vec<_> = v.into_iter().map(|n| n.into_iter()).collect();
+    (0..len)
+        .map(|_| {
+            iters
+                .iter_mut()
+                // 👇
+                .rev()
+                .filter_map(|n| n.next().unwrap())
+                .collect::<Vec<T>>()
+        })
+        .collect()
 }
 
 #[cfg(test)]

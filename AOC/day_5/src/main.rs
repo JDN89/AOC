@@ -1,20 +1,22 @@
+use nom::combinator::all_consuming;
+use nom::Finish;
+use crate::parse::{parse_row, receive_input, transpose_rev};
+
 mod parse;
 
 fn main() {
+    let mut lines = include_str!("test.txt").lines();
 
-    let input = read_input().unwrap();
-    parse::receive_input(&input);
-    // match part1::create_grid(&input) {
-    //     Ok(value) => println!("{:?}", value),
-    //     Err(e) => println!("{:?}", e)
-    // }
-    // match part_2_refactored::create_grid(&input) {
-    //     Ok(value) => println!("{:?}", value),
-    //     Err(e) => println!("{:?}", e)
-    // }
-}
-
-fn read_input() -> Result<String, std::io::Error> {
-    Ok(std::fs::read_to_string("src/test.txt")?)
-    // Ok(std::fs::read_to_string("src/part1.txt")?)
+    let crate_lines: Vec<_> = (&mut lines)
+        .map_while(|line| {
+            all_consuming(parse_row)(line)
+                .finish()
+                .ok()
+                .map(|(_, line)| line)
+        })
+        .collect();
+    let crate_columns = transpose_rev(crate_lines);
+    for col in &crate_columns {
+        println!("{col:?}");
+    }
 }
