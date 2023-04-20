@@ -1,4 +1,4 @@
-use nom::{IResult, bytes::complete::tag, character::complete::anychar, sequence::{delimited}, Parser};
+use nom::{bytes::complete::tag, character::complete::anychar, IResult, Parser, sequence::delimited};
 use nom::branch::alt;
 use nom::combinator::map;
 use nom::multi::{separated_list0, separated_list1};
@@ -6,18 +6,23 @@ use nom::multi::{separated_list0, separated_list1};
 pub fn parse_crate(input: &str) -> IResult<&str, char> {
     delimited(tag("["), anychar, tag("]"))(input)
 }
+
 pub fn parse_hole(input: &str) -> IResult<&str, ()> {
-    let (reminder,_) = tag("   ")(input)?;
-    Ok((reminder,()))
+    let (reminder, _) = tag("   ")(input)?;
+    Ok((reminder, ()))
 }
 
 pub fn parse_crate_or_hole(input: &str) -> IResult<&str, Option<char>> {
     let parse_crate_some = map(parse_crate, Some);
-    let parse_hole_none = map(parse_hole,|_| None);
+    let parse_hole_none = map(parse_hole, |_| None);
     alt((parse_crate_some, parse_hole_none))(input)
 }
 
-pub fn receive_input(input: &str)  {
+pub fn parse_row(input: &str) -> IResult<&str, Vec<Option<char>>> {
+    separated_list1(tag(" "), parse_crate_or_hole)(input)
+}
+
+pub fn receive_input(input: &str) {
     input.lines().for_each(|line| {
         println!("{:?}", line);
     });
@@ -25,7 +30,6 @@ pub fn receive_input(input: &str)  {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
 
     #[test]
@@ -45,8 +49,9 @@ mod tests {
     fn test_parse_hole() {
         let input = "   ";
         let result = parse_hole(input);
-        assert_eq!(result, Ok(("",())))
+        assert_eq!(result, Ok(("", ())))
     }
+
     #[test]
     fn test_parse_crate_or_hole_crate() {
         let input = "[A]";
@@ -68,5 +73,10 @@ mod tests {
         assert!(result.is_err());
     }
 
-
+    #[test]
+    fn test_parse_row() {
+        let input = "[A] [B] [C]";
+        let result = parse_row(input);
+        assert_eq!(result, Ok(("", vec![Some('A'), Some('B'), Some('C')])));
+    }
 }
