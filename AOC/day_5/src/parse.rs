@@ -9,7 +9,7 @@ pub fn parse_crate(input: &str) -> IResult<&str, char> {
 
 pub fn parse_hole(input: &str) -> IResult<&str, ()> {
     let (reminder, _) = tag("   ")(input)?;
-    Ok((reminder, ()))
+    Ok((reminder,()))
 }
 
 pub fn parse_crate_or_hole(input: &str) -> IResult<&str, Option<char>> {
@@ -78,5 +78,14 @@ mod tests {
         let input = "[A] [B] [C]";
         let result = parse_row(input);
         assert_eq!(result, Ok(("", vec![Some('A'), Some('B'), Some('C')])));
+    }
+
+    #[test]
+    fn test_parse_row_hole_and_crate() {
+        //5 spaces,between [A] and [B], " " switches between crate and hole so
+        // "   " is a hole and "[A]" is a crate
+        let input = "[A]     [B]    ";
+        let result = parse_row(input);
+        assert_eq!(result, Ok(("", vec![Some('A'), None, Some('B'), None])));
     }
 }
