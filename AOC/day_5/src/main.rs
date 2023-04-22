@@ -1,7 +1,8 @@
 use nom::combinator::all_consuming;
 use nom::Finish;
-use crate::parse::{parse_row};
-use crate::transpose::{transpose_rev};
+
+use crate::parse::{parse_instruction, parse_row};
+use crate::transpose::transpose_rev;
 
 mod parse;
 mod transpose;
@@ -23,19 +24,13 @@ fn main() {
         println!("{:?}", col);
     }
 
-    for line in lines {
-        println!("{:?}", line);
+    assert!(lines.next().unwrap().is_empty());
+
+    let instructions: Vec<_> = lines
+        .map(|line|
+            all_consuming(parse_instruction)(line).finish().unwrap().1)
+        .collect();
+    for ins in &instructions {
+        println!("{ins:?}");
     }
-    // let number_lines: Vec<_> = lines
-    //     .map(|line| {
-    //         all_consuming(pile_numbers)(line)
-    //             .finish()
-    //             .ok()
-    //             .map(|(_, line)| line)
-    //     })
-    //     .collect();
-    //
-    // for line in &number_lines {
-    //     println!("{:?}", line);
-    // }
 }

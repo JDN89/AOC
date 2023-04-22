@@ -1,6 +1,7 @@
 use nom::{
     IResult,
     character::complete::anychar,
+    character::complete::digit1,
     bytes::complete::tag,
     sequence::delimited,
     branch::alt,
@@ -12,7 +13,7 @@ use nom::{
 use nom::bytes::streaming::take_while1;
 
 use nom::combinator::map_res;
-
+use nom::sequence::{preceded, tuple};
 
 
 pub fn parse_crate(input: &str) -> IResult<&str, char> {
@@ -32,18 +33,33 @@ pub fn parse_crate_or_hole(input: &str) -> IResult<&str, Option<char>> {
 
 pub fn parse_row(input: &str) -> IResult<&str, Vec<Option<char>>> {
     let (reminder,row) = separated_list1(tag(" "), parse_crate_or_hole)(input)?;
-    println!("reminder: {:?}",reminder);
     Ok((reminder,row))
 }
 
-fn parse_number(i: &str) -> IResult<&str, usize> {
-    map_res(take_while1(|c: char| c.is_ascii_digit()), |s: &str| {
-        s.parse::<usize>()
-    })(i)
+#[derive(Debug, PartialEq)]
+pub struct Instruction {
+    mve: usize,
+    from: usize,
+    to: usize,
 }
 
-pub fn pile_numbers(input: &str) -> IResult<&str, Vec<usize>> {
-    separated_list1(tag(" "), parse_number)(input)
+fn parse_number(i: &str) -> IResult<&str, usize> {
+    map_res(digit1, |s: &str| s.parse::<usize>())(i)
+}
+
+pub fn pile_number(input: &str) -> IResult<&str, usize> {
+    map(parse_number, |n| n -1)(input)
+}
+
+pub fn parse_instruction(input: &str) -> IResult<&str,Instruction> {
+    println!("parse_instruction({:?})", input);
+   map(tuple((
+       preceded(tag("move "), parse_number),
+       preceded(tag(" from "), pile_number),
+       preceded(tag(" to "), pile_number)
+       )),
+       |(mve,from,to)| Instruction{mve,from,to},
+   ) (input)
 }
 
 
@@ -102,4 +118,22 @@ mod tests {
         let result = parse_row(input);
         assert_eq!(result, Ok(("", vec![Some('A'), None, Some('B'), None])));
     }
+
+    #[test]
+    fn test_parse_instruction() {
+        assert_eq!(
+            parse_instruction("move 3 from 1 to 2"),
+            Ok((
+                "",
+                Instruction {
+                    mve: 3,
+                    from: 0,
+                    to: 1
+                }
+            ))
+        );
+
+        // Add more test cases here
+    }
+
 }
