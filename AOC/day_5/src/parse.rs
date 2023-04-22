@@ -7,13 +7,13 @@ use nom::{
     combinator::{map},
     multi::separated_list1
 };
-use std::iter::Iterator;
-use std::num::ParseIntError;
+
+
 use nom::bytes::streaming::take_while1;
-use nom::character::is_digit;
+
 use nom::combinator::map_res;
-use nom::error::Error;
-use nom::sequence::tuple;
+
+
 
 pub fn parse_crate(input: &str) -> IResult<&str, char> {
     delimited(tag("["), anychar, tag("]"))(input)
