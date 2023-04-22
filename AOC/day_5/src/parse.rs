@@ -8,6 +8,12 @@ use nom::{
     multi::separated_list1
 };
 use std::iter::Iterator;
+use std::num::ParseIntError;
+use nom::bytes::streaming::take_while1;
+use nom::character::is_digit;
+use nom::combinator::map_res;
+use nom::error::Error;
+use nom::sequence::tuple;
 
 pub fn parse_crate(input: &str) -> IResult<&str, char> {
     delimited(tag("["), anychar, tag("]"))(input)
@@ -25,23 +31,22 @@ pub fn parse_crate_or_hole(input: &str) -> IResult<&str, Option<char>> {
 }
 
 pub fn parse_row(input: &str) -> IResult<&str, Vec<Option<char>>> {
-    separated_list1(tag(" "), parse_crate_or_hole)(input)
+    let (reminder,row) = separated_list1(tag(" "), parse_crate_or_hole)(input)?;
+    println!("reminder: {:?}",reminder);
+    Ok((reminder,row))
 }
 
-pub fn transpose_rev<T>(v: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
-    assert!(!v.is_empty());
-    let len = v[0].len();
-    let mut iters: Vec<_> = v.into_iter().map(|n| n.into_iter()).collect();
-    (0..len)
-        .map(|_| {
-            iters
-                .iter_mut()
-                .rev()
-                .filter_map(|n| n.next().and_then(|opt| opt))
-                .collect::<Vec<T>>()
-        })
-        .collect()
+fn parse_number(i: &str) -> IResult<&str, usize> {
+    map_res(take_while1(|c: char| c.is_ascii_digit()), |s: &str| {
+        s.parse::<usize>()
+    })(i)
 }
+
+pub fn pile_numbers(input: &str) -> IResult<&str, Vec<usize>> {
+    separated_list1(tag(" "), parse_number)(input)
+}
+
+
 
 #[cfg(test)]
 mod tests {
