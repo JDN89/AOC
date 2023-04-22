@@ -45,4 +45,14 @@ fn main() {
             }
         }
     println!("result: {:?}", crate_columns);
+    let mut result:Vec<&char> = vec![];
+    let _ = crate_columns.iter().for_each(
+        |vec| match vec.last() {
+            Some(last_value) => result.push(last_value),
+            //println!("last: {:?}",last_value) ,
+            None => println!("no value"),
+        }
+    );
+    println!("result = {:?}",result);
+
     }
