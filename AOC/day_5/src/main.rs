@@ -31,11 +31,11 @@ fn main() {
             all_consuming(parse_instruction)(line).finish().unwrap().1)
         .collect();
     for ins in &instructions {
-            for p in 0..ins.mve {
+            for _p in 0..ins.mve {
                let temp =  crate_columns[ins.from].pop();
                 println!("temp: {:?} ",temp);
                 match temp {
-                    Some(T) => crate_columns[ins.to].push(T),
+                    Some(t) => crate_columns[ins.to].push(t),
                     None => println!("stack is empty")
                 }
 
