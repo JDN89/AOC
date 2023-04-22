@@ -32,9 +32,6 @@ fn main() {
         .collect();
     for ins in &instructions {
             for p in 0..ins.mve {
-               let from  = &crate_columns[ins.from];
-                let to = &crate_columns[ins.to];
-                // println!("from: {:?}, to: {:?}",from,to)
                let temp =  crate_columns[ins.from].pop();
                 println!("temp: {:?} ",temp);
                 match temp {
