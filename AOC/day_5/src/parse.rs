@@ -38,9 +38,9 @@ pub fn parse_row(input: &str) -> IResult<&str, Vec<Option<char>>> {
 
 #[derive(Debug, PartialEq)]
 pub struct Instruction {
-    mve: usize,
-    from: usize,
-    to: usize,
+    pub mve: usize,
+    pub from: usize,
+    pub to: usize,
 }
 
 fn parse_number(i: &str) -> IResult<&str, usize> {
