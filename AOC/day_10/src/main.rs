@@ -28,12 +28,14 @@ fn main() {
 
 fn execute_cycle_actions(cycle_count: &mut i32, x_register: i32, lit_pixels: &mut Vec<i32>) {
     *cycle_count += 1;
+// Check if the cycle count is within the sprite range
     if x_register <= *cycle_count && *cycle_count <= x_register + 2 {
+        // This step records the positions of lit pixels (i.e., "#") in the current row.
         lit_pixels.push(*cycle_count - 1);
     }
     if *cycle_count == 40 {
-        for idx in 0..40 {
-            if lit_pixels.contains(&idx) {
+        for index in 0..40 {
+            if lit_pixels.contains(&index) {
                 print!("#");
             } else {
                 print!(".");
