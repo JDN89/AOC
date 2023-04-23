@@ -3,19 +3,67 @@
 // 20 th cycle result
 // 60th 100th adn 140th cycle result
 //
-use nom::character::complete::char as nom_char; // Use an alias for 'char'
+/* use nom::character::complete::char as nom_char; // Use an alias for 'char'
 
 use nom::{
     IResult,
     character::complete::digit1,
     bytes::complete::tag,
     combinator::{opt, map_res},
-};
+}; */
 
-use nom::sequence::{preceded, tuple};
+/* use nom::sequence::{preceded, tuple}; */
+
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 fn main() {
-    let lines = include_str!("../example.txt").lines();
+    let file = File::open("input.txt").expect("Failed to open input file");
+    let reader = BufReader::new(file);
+
+    let commands: Vec<String> = reader.lines().map(|l| l.unwrap()).collect();
+
+    task_2(&commands);
+}
+
+fn execute_cycle_actions(cycle_count: &mut i32, x_register: i32, lit_pixels: &mut Vec<i32>) {
+    *cycle_count += 1;
+    if x_register <= *cycle_count && *cycle_count <= x_register + 2 {
+        lit_pixels.push(*cycle_count - 1);
+    }
+    if *cycle_count == 40 {
+        for idx in 0..40 {
+            if lit_pixels.contains(&idx) {
+                print!("#");
+            } else {
+                print!(".");
+            }
+        }
+        println!();
+        lit_pixels.clear();
+        *cycle_count = 0;
+    }
+}
+
+fn task_2(commands: &[String]) {
+    let mut lit_pixels = Vec::new();
+    let mut x_register = 1;
+    let mut cycle_count = 0;
+
+    println!("Task 2 result: ");
+    for command in commands {
+        execute_cycle_actions(&mut cycle_count, x_register, &mut lit_pixels);
+        if command.starts_with("addx") {
+            execute_cycle_actions(&mut cycle_count, x_register, &mut lit_pixels);
+            x_register += command.split_whitespace().nth(1).unwrap().parse::<i32>().unwrap();
+        }
+    }
+}
+
+//part 1:
+
+/* fn main() {
+    let lines = include_str!("../input.txt").lines();
     let mut cycle_check = 20;
     let mut cycle_count = 0;
     let mut x_register = 1;
@@ -59,5 +107,5 @@ fn parse_signed_number(input: &str) -> IResult<&str, i32> {
             }
         },
     )(input)
-}
+} */
 
