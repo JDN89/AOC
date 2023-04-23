@@ -3,11 +3,10 @@
 // 20 th cycle result
 // 60th 100th adn 140th cycle result
 //
-
+use nom::character::complete::char as nom_char; // Use an alias for 'char'
 
 use nom::{
     IResult,
-    character::complete::char,
     character::complete::digit1,
     bytes::complete::tag,
     sequence::delimited,
@@ -35,27 +34,28 @@ fn main() {
         }
     }
 
+
+
 pub fn parse_instruction(ins: &str) -> IResult<&str, i32> {
-    let instruction = preceded(tag("addx "), parse_signed_number);
-    instruction(ins)
+    let mut instruction = preceded(tag("addx "), parse_signed_number);
+let (reminder, result) = instruction(ins)?;
+    Ok((reminder,result))
 }
 
-fn parse_signed_number(input: &str) -> IResult<&str, i32> {
-    map_res(
-        tuple((opt(char('-')), digit1)),
-        |(sign, digits): (Option<char>, &str)| {
-            let mut num = digits.parse::<i32>()?;
-            if sign.is_some() {
-                num = -num;
-            }
-            Ok(num)
-        },
-    )(input)
-}
-
+    fn parse_signed_number(input: &str) -> IResult<&str, i32> {
+        map(
+            tuple((opt(nom_char('-')), digit1)),
+            |(sign, digits): (Option<char>, &str)| {
+                let mut num = digits.parse::<i32>().unwrap();
+                if sign.is_some() {
+                    num = -num;
+                }
+                num
+            },
+        )(input)
+    }
 
 
 
 
     }
-
