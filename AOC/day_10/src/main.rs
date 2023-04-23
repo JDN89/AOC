@@ -28,19 +28,23 @@ fn main() {
 
 fn execute_cycle_actions(cycle_count: &mut i32, x_register: i32, lit_pixels: &mut Vec<i32>) {
     *cycle_count += 1;
-// Check if the cycle count is within the sprite range
+    // Check if the cycle count is within the sprite range
     if x_register <= *cycle_count && *cycle_count <= x_register + 2 {
         // This step records the positions of lit pixels (i.e., "#") in the current row.
         lit_pixels.push(*cycle_count - 1);
     }
+    //true -> end of row is reached
     if *cycle_count == 40 {
         for index in 0..40 {
+            //iterate over the positions 0..39
+            //print # if contains index
             if lit_pixels.contains(&index) {
                 print!("#");
             } else {
                 print!(".");
             }
         }
+        // After printing all the positions in the row, print a newline character to move to the next row
         println!();
         lit_pixels.clear();
         *cycle_count = 0;
@@ -57,7 +61,12 @@ fn task_2(commands: &[String]) {
         execute_cycle_actions(&mut cycle_count, x_register, &mut lit_pixels);
         if command.starts_with("addx") {
             execute_cycle_actions(&mut cycle_count, x_register, &mut lit_pixels);
-            x_register += command.split_whitespace().nth(1).unwrap().parse::<i32>().unwrap();
+            x_register += command
+                .split_whitespace()
+                .nth(1)
+                .unwrap()
+                .parse::<i32>()
+                .unwrap();
         }
     }
 }
@@ -72,7 +81,7 @@ fn task_2(commands: &[String]) {
     let mut signal_strength = 0;
 
     for line in lines {
-        
+
         cycle_count += 1;
         if line.starts_with("addx") {
             cycle_count +=1;
@@ -110,4 +119,3 @@ fn parse_signed_number(input: &str) -> IResult<&str, i32> {
         },
     )(input)
 } */
-
