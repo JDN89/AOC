@@ -1,0 +1,44 @@
+// addx += 2 cycles
+// noop += 1 cycle
+// 20 th cycle result
+// 60th 100th adn 140th cycle result
+//
+
+
+use nom::{
+    IResult,
+    character::complete::anychar,
+    character::complete::digit1,
+    bytes::complete::tag,
+    sequence::delimited,
+    branch::alt,
+    combinator::{map},
+    multi::separated_list1
+};
+
+fn main() {
+    let lines = include_str!("../example.txt").lines();
+    let mut cycle_check = 20;
+        let mut cycle_count = 0;
+        let mut x_register = 1;
+
+    for line in lines {
+        cycle_count +=1;
+        println!("{:?}",line);
+        if line.starts_with("addx") {
+
+            println!("+=1");
+        }
+    }
+
+    pub fn parse_instruction ( ins: &str) -> IResult {
+        let (reminder, adder)   = alt((tag()))
+
+        println!("{:?}",ins);
+        3
+
+    }
+
+
+    }
+
