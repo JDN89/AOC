@@ -3,6 +3,8 @@
 // 20 th cycle result
 // 60th 100th adn 140th cycle result
 //
+use std::num::ParseIntError;
+
 use nom::character::complete::char as nom_char; // Use an alias for 'char'
 
 use nom::{
@@ -18,44 +20,38 @@ use nom::{
 use nom::combinator::map_res;
 use nom::sequence::{preceded, tuple};
 
-
 fn main() {
     let lines = include_str!("../example.txt").lines();
     let mut cycle_check = 20;
-        let mut cycle_count = 0;
-        let mut x_register = 1;
+    let mut cycle_count = 0;
+    let mut x_register = 1;
 
     for line in lines {
-        cycle_count +=1;
-        println!("{:?}",line);
+        cycle_count += 1;
+        println!("{:?}", line);
         if line.starts_with("addx") {
             let result = parse_instruction(line);
-            println!("{:?}",result);
+            println!("{:?}", result);
         }
     }
-
-
+}
 
 pub fn parse_instruction(ins: &str) -> IResult<&str, i32> {
     let mut instruction = preceded(tag("addx "), parse_signed_number);
-let (reminder, result) = instruction(ins)?;
-    Ok((reminder,result))
+    let (reminder, result) = instruction(ins)?;
+    Ok((reminder, result))
 }
 
-    fn parse_signed_number(input: &str) -> IResult<&str, i32> {
-        map(
-            tuple((opt(nom_char('-')), digit1)),
-            |(sign, digits): (Option<char>, &str)| {
-                let mut num = digits.parse::<i32>().unwrap();
-                if sign.is_some() {
-                    num = -num;
-                }
-                num
-            },
-        )(input)
-    }
+fn parse_signed_number(input: &str) -> IResult<&str, i32> {
+    map(
+        tuple((opt(nom_char('-')), digit1)),
+        |(sign, digits): (Option<char>, &str)| {
+            let mut num = digits.parse::<i32>().unwrap();
+            if sign.is_some() {
+                num = -num;
+            }
+            num
+        },
+    )(input)
+}
 
-
-
-
-    }
