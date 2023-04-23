@@ -44,10 +44,10 @@ fn main() {
         }
         temp_crate.reverse();
 
-        for c in temp_crate {
-            crate_columns[ins.to].push(c);
+        for item in temp_crate {
+            crate_lines[ins.to].push(item);
         }
-
+        
         
     }
     println!("result: {:?}", crate_columns);
