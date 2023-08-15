@@ -5,13 +5,11 @@ pub fn process_part1(input: &str) -> u32 {
             elf_load
                 .lines()
                 .map(|item|
-                    item.parse::<u32>().unwrap())
+                    item.parse::<u32>().expect("couldnt parse"))
                 .sum::<u32>()
         })
         .max()
-        .unwrap();
-
-    println!("{:?}", result);
+        .expect("expected a value here");
     result
 }
 
