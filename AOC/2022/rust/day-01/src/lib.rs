@@ -4,23 +4,22 @@ pub fn process_part1(input: &str) -> u32 {
         .map(|elf_load| {
             elf_load
                 .lines()
-                .map(|item|
-                    item.parse::<u32>().expect("couldnt parse"))
-                .sum::<u32>()
+                .map(|item| item.parse::<u32>().expect("item"))
+                .sum()
         })
         .max()
-        .expect("expected a value here");
+        .expect("excted a value here");
     result
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        let result = process_part1("1000
+    fn day1_part1() {
+        let result = process_part1(
+            "1000
 2000
 3000
 
@@ -33,7 +32,8 @@ mod tests {
 8000
 9000
 
-10000");
+10000",
+        );
         assert_eq!(result, 24000);
     }
 }
