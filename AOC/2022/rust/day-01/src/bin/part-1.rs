@@ -1,7 +1,10 @@
-use day_01::process_part1;
 use std::fs;
+use day_01::process_part1;
 
 fn main() {
-    let file = fs::read_to_string("test_input.txt").unwrap();
-    println!("{:?}", process_part1(&file));
+    let total = fs::read_to_string("test_input.txt").unwrap();
+    let result = process_part1(&total);
+
+
+    // println!("{:?}", total);
 }
