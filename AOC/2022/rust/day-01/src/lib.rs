@@ -1,3 +1,7 @@
+// run specific part with: cargo build --bin part-1 or part-2
+
+use itertools::Itertools;
+
 pub fn process_part1(input: &str) -> u32 {
     let result = input
         .split("\n\n")
@@ -12,27 +16,33 @@ pub fn process_part1(input: &str) -> u32 {
     result
 }
 
-pub fn process_part2(input: &str) -> u32 {
+//use the iter tools crate!!
+pub fn process_part2(input: &str) -> i32 {
     let result = input
         .split("\n\n")
         .map(|elf_load| {
             elf_load
                 .lines()
-                .map(|item| item.parse::<u32>().expect("item"))
-                .sum()
+                .map(|item| {
+                    item.parse::<i32>()
+                        .expect("item couldn't be parsed to an u32")
+                })
+                .sum::<i32>()
         })
-        .max()
-        .expect("excted a value here");
+        .sorted()
+        .rev()
+        .take(3)
+        .sum();
+    println!("{}", result);
     result
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn day1_part1() {
-        let result = process_part1(
-            "1000
+    // Define a constant input for ease of use
+    const INPUT: &str = "1000
 2000
 3000
 
@@ -45,8 +55,16 @@ mod tests {
 8000
 9000
 
-10000",
-        );
-        assert_eq!(result, 24000);
+10000";
+
+    #[test]
+    fn day1_part1() {
+        assert_eq!(process_part1(INPUT), 24000);
+    }
+
+    #[test]
+    fn day1_part2() {
+        assert_eq!(process_part2(INPUT), 45000);
     }
 }
+
