@@ -67,4 +67,3 @@ mod tests {
         assert_eq!(process_part2(INPUT), 45000);
     }
 }
-
