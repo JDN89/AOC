@@ -14,3 +14,4 @@
 - Module Module std::cmp
     - utilities for comparing and ordering values
     - PartialOrd trait
+- The FromStr trait in Rust is used to parse a string into some kind of object, and the parse method on strings utilizes the FromStr imp  lementation for the desired type to perform the parsing. 
