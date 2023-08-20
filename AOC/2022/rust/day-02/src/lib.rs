@@ -1,26 +1,3 @@
-// run specific part with: cargo build --bin part-1 or part-2
-// A  X ROCK    1
-// B  Y PAPER   2
-// C  Z SICCORS 3
-
-// start with enum move
-// Rock
-// paper Siscors
-//
-// round theirs ours
-//
-// partial ord
-// If the input is "A" or "X", return Move::Rock.
-// If the input is "B" or "Y", return Move::Paper.
-// If the input is "C" or "Z", return Move::Scissors.
-// For any other input, return an error.
-//
-// fromtstr
-//
-// Scissors are less than Rock (i.e., Rock wins over Scissors).
-// Rock is greater than Scissors.
-// For all other comparisons, it falls back to comparing their numeric representation (1 for Rock, 2 for Paper, 3 for Scissors).
-
 use std::cmp::Ordering;
 use std::cmp::Ordering::Equal;
 use std::str::FromStr;
@@ -36,8 +13,8 @@ impl PartialOrd for Move {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         use Move::*;
         match (self, other) {
-            (Rock, Scissors) | (Scissors, Paper) | (Paper, Rock) => Some(Ordering::Greater),
-            (Scissors, Rock) | (Rock, Paper) | (Paper, Scissors) => Some(Ordering::Less),
+            (Rock, Scissors) | (Scissors, Paper) | (Paper, Rock) => Some(Ordering::Less),
+            (Scissors, Rock) | (Rock, Paper) | (Paper, Scissors) => Some(Ordering::Greater),
             //check if the same through partialEq
             _ if self == other => Some(Equal),
             _ => None
@@ -73,7 +50,7 @@ pub fn process_part1(input: &str) -> u32 {
                 .collect();
             match moves[0].partial_cmp(&moves[1]) {
                 Some(Ordering::Greater) => 6 + moves[1] as u32,
-                Some(Ordering::Equal) => 3 + moves[1].value(),
+                Some(Equal) => 3 + moves[1].value(),
                 Some(Ordering::Less) => 0 + moves[1].value(),
                 None => panic!("unexpected cmp operation")
             }
@@ -82,7 +59,7 @@ pub fn process_part1(input: &str) -> u32 {
 }
 
 //use the iter tools crate!!
-pub fn process_part2(input: &str) -> i32 {
+pub fn process_part2(_input: &str) -> i32 {
     todo!()
 }
 
@@ -93,11 +70,13 @@ mod tests {
     // Define a constant input for ease of use
     const INPUT: &str = "A Y
 B X
-C Z";
+C Z
+A X
+C Y";
 
     #[test]
     fn day1_part1() {
-        assert_eq!(process_part1(INPUT), 15);
+        assert_eq!(process_part1(INPUT), 21);
     }
 
     /* #[test]
