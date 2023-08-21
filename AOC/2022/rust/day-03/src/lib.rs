@@ -19,6 +19,17 @@ fn common_characters(s1: &str, s2: &str) -> char {
     panic!("no common characters")
 }
 
+fn convert_to_priority(ch: char) -> Some(u32) {
+    // if ch is uppercase -> set bool
+    // is_uppercase
+    let upper = ch.is_uppercase();
+    let mut priority: u32;
+    if ch.is_ascii() {
+        Some(ch as u32)
+    }
+    todo!();
+}
+
 pub fn process_part1(input: &str) -> u32 {
     input.lines().map(|line| {
         let tup: (&str, &str) = split_in_middle(line);
