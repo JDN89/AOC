@@ -64,29 +64,30 @@ ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw";
 
     #[test]
-    fn day1_part1() {
+    fn test_day1_part1() {
         assert_eq!(process_part1(INPUT), 157);
     }
 
     #[test]
-    fn test_split() {
-        assert_eq!(split_in_middle("abcd"), ("ab", "cd"))
-    }
-    #[test]
-    fn test_find_common_characters() {
-        assert_eq!(common_characters("bart", "cord"), 'r')
+    fn test_split_in_middle() {
+        assert_eq!(split_in_middle("abcd"), ("ab", "cd"));
     }
 
     #[test]
-    fn convert_common_char_to_priority_value() {
+    fn test_common_characters_in_strings() {
+        assert_eq!(common_characters("bart", "cord"), 'r');
+    }
+
+    #[test]
+    fn test_convert_common_char_to_priority() {
         assert_eq!(convert_to_priority('a'), Some(1));
         assert_eq!(convert_to_priority('c'), Some(3));
         assert_eq!(convert_to_priority('A'), Some(27));
-        assert_eq!(convert_to_priority('B'), Some(28))
+        assert_eq!(convert_to_priority('B'), Some(28));
     }
 
-    /* #[test]
-    fn day1_part2() {
-        assert_eq!(process_part2(INPUT), 45000);
-    } */
+    // #[test]
+    // fn test_day1_part2() {
+    //     assert_eq!(process_part2(INPUT), 45000);
+    // }
 }
