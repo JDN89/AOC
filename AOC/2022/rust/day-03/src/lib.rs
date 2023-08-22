@@ -19,24 +19,36 @@ fn common_characters(s1: &str, s2: &str) -> char {
     panic!("no common characters")
 }
 
-fn convert_to_priority(ch: char) -> Some(u32) {
+fn convert_to_priority(ch: char) -> Option<u32> {
+    //A starts at 65 -> 27
+    //a starts at 97 _ 1
     // if ch is uppercase -> set bool
     // is_uppercase
     let upper = ch.is_uppercase();
-    let mut priority: u32;
+    let priority: Option<u32>;
     if ch.is_ascii() {
-        Some(ch as u32)
+        if upper {
+            priority = Some(ch as u32 - 38)
+        } else {
+            priority = Some(ch as u32 - 96)
+        }
+    } else {
+        priority = None
     }
-    todo!();
+    priority
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    input.lines().map(|line| {
-        let tup: (&str, &str) = split_in_middle(line);
-        let common = common_characters(tup.0, tup.1);
-    });
-
-    todo!()
+    let result = input
+        .lines()
+        .map(|line| {
+            let _tup: (&str, &str) = split_in_middle(line);
+            let _common = common_characters(_tup.0, _tup.1);
+            let prio = convert_to_priority(_common).expect("not a valid character");
+            prio
+        })
+        .sum();
+    result
 }
 
 #[cfg(test)]
@@ -58,11 +70,19 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
 
     #[test]
     fn test_split() {
-        assert_eq!(split_in_middle("abcd"), ("ab", "cf"))
+        assert_eq!(split_in_middle("abcd"), ("ab", "cd"))
     }
     #[test]
     fn test_find_common_characters() {
         assert_eq!(common_characters("bart", "cord"), 'r')
+    }
+
+    #[test]
+    fn convert_common_char_to_priority_value() {
+        assert_eq!(convert_to_priority('a'), Some(1));
+        assert_eq!(convert_to_priority('c'), Some(3));
+        assert_eq!(convert_to_priority('A'), Some(27));
+        assert_eq!(convert_to_priority('B'), Some(28))
     }
 
     /* #[test]
