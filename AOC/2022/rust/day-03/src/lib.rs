@@ -24,6 +24,7 @@ fn convert_to_priority(ch: char) -> Option<u32> {
     //a starts at 97 _ 1
     // if ch is uppercase -> set bool
     // is_uppercase
+    todo!("convert to pattern matching!!");
     let upper = ch.is_uppercase();
     let priority: Option<u32>;
     if ch.is_ascii() {
