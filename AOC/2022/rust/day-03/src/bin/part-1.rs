@@ -7,4 +7,3 @@ fn main() {
     let result = process_part1(&total);
     println!("{:?}", result);
 }
-

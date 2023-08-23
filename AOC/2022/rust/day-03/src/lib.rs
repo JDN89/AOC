@@ -1,4 +1,21 @@
+
 use std::collections::HashSet;
+use std::convert::TryFrom;
+
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+struct Priority(u32);
+
+impl TryFrom<char> for Priority {
+    type Error = &'static str;
+
+    fn try_from(ch: char) -> Result<Self, Self::Error> {
+        match ch {
+            'a'..='z' => Ok(Priority(ch as u32 - 96)),
+            'A'..='Z' => Ok(Priority(ch as u32 - 38)),
+            _ => Err("Character is not a valid alphabet letter"),
+        }
+    }
+}
 
 fn split_in_middle(s: &str) -> (&str, &str) {
     let mid = s.len() / 2;
@@ -19,37 +36,17 @@ fn common_characters(s1: &str, s2: &str) -> char {
     panic!("no common characters")
 }
 
-fn convert_to_priority(ch: char) -> Option<u32> {
-    //A starts at 65 -> 27
-    //a starts at 97 _ 1
-    // if ch is uppercase -> set bool
-    // is_uppercase
-    todo!("convert to pattern matching!!");
-    let upper = ch.is_uppercase();
-    let priority: Option<u32>;
-    if ch.is_ascii() {
-        if upper {
-            priority = Some(ch as u32 - 38)
-        } else {
-            priority = Some(ch as u32 - 96)
-        }
-    } else {
-        priority = None
-    }
-    priority
-}
-
 pub fn process_part1(input: &str) -> u32 {
-    let result = input
+    input
         .lines()
         .map(|line| {
-            let _tup: (&str, &str) = split_in_middle(line);
-            let _common = common_characters(_tup.0, _tup.1);
-            let prio = convert_to_priority(_common).expect("not a valid character");
-            prio
+            let (part1, part2) = split_in_middle(line);
+            let common_char = common_characters(part1, part2);
+            Priority::try_from(common_char)
+                .expect("Not a valid character")
+                .0
         })
-        .sum();
-    result
+        .sum()
 }
 
 #[cfg(test)]
@@ -77,14 +74,6 @@ CrZsJsPPZsGzwwsLwLmpwMDw";
     #[test]
     fn test_common_characters_in_strings() {
         assert_eq!(common_characters("bart", "cord"), 'r');
-    }
-
-    #[test]
-    fn test_convert_common_char_to_priority() {
-        assert_eq!(convert_to_priority('a'), Some(1));
-        assert_eq!(convert_to_priority('c'), Some(3));
-        assert_eq!(convert_to_priority('A'), Some(27));
-        assert_eq!(convert_to_priority('B'), Some(28));
     }
 
     // #[test]
