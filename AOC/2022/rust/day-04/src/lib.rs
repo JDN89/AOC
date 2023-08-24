@@ -4,6 +4,14 @@
 // make 2 ranges -> rang1 and range 2
 // range1.contains rang2.start && range2.end
 //eazy peasy?
+//
+//steps: split at ,
+//convert 2-3 to a tuple ;
+//implement tryFrom for Range (value:(i32,i32)) -> Result<Self,Self::Error>
+
+//nom use:
+//map_res = convert to i32
+// seperated pair -> to convert to range Ok((remiaing_input,start..end))
 
 pub fn process_part1(input: &str) -> u32 {}
 
