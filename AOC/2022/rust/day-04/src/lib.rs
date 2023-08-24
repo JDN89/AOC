@@ -9,9 +9,17 @@
 //convert 2-3 to a tuple ;
 //implement tryFrom for Range (value:(i32,i32)) -> Result<Self,Self::Error>
 
+/* https://docs.rs/nom/latest/nom/combinator/fn.map_res.html */
+// https://github.com/rust-bakery/nom/blob/main/doc/choosing_a_combinator.md
+// https://docs.rs/nom/latest/nom/#traits
 //nom use:
 //map_res = convert to i32
 // seperated pair -> to convert to range Ok((remiaing_input,start..end))
+//
+// fn parse_to_range(s: &str) -> Option<std::ops::Range<i32>>
+// std lib looks easier in this case then using nom. lezz go
+//
+//implement nom also, just do both fo the fun of it
 
 pub fn process_part1(input: &str) -> u32 {}
 
