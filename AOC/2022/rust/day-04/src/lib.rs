@@ -1,4 +1,10 @@
 // find complete overlap
+// range rust
+// https://doc.rust-lang.org/std/ops/struct.Range.html
+// make 2 ranges -> rang1 and range 2
+// range1.contains rang2.start && range2.end
+//eazy peasy?
+
 pub fn process_part1(input: &str) -> u32 {}
 
 #[cfg(test)]
