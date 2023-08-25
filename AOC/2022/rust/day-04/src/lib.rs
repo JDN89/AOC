@@ -21,7 +21,24 @@
 //
 //implement nom also, just do both fo the fun of it
 
-pub fn process_part1(input: &str) -> u32 {}
+use std::ops::Range;
+
+use itertools::Itertools;
+
+fn parse_to_range(s: &str) -> Option<Range<i32>> {
+    let pair: (i32, i32) = s
+        .split('-')
+        .map(|p| p.parse::<i32>().expect("Unable to parse str to i32"))
+        .collect_tuple()
+        .expect("didn't receive a pair in the String");
+    Some(pair.0..pair.1)
+}
+
+pub fn process_part1(input: &str) -> u32 {
+    let seperated_pairs: Vec<_> = input.lines().map(|line| line.split(',')).collect();
+
+    todo!()
+}
 
 #[cfg(test)]
 mod tests {
@@ -38,6 +55,10 @@ mod tests {
     #[test]
     fn test_day1_part1() {
         assert_eq!(process_part1(INPUT), 2);
+    }
+    #[test]
+    fn pare_to_range_test() {
+        assert_eq!(parse_to_range("2-5"), Some(2..5));
     }
 
     // #[test]
