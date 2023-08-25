@@ -35,7 +35,16 @@ fn parse_to_range(s: &str) -> Option<Range<i32>> {
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    let seperated_pairs: Vec<_> = input.lines().map(|line| line.split(',')).collect();
+    let seperated_pairs: Vec<_> = input
+        .lines()
+        .map(|line| {
+            let pair: Option<(&str, &str)> = line.split(',').collect_tuple();
+            let parsed_range = match pair {
+                Some(p) => (parse_to_range(p.0), parse_to_range(p.1)),
+                None => panic!("No pair found!"),
+            };
+        })
+        .collect();
 
     todo!()
 }
