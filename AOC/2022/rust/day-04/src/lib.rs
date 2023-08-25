@@ -25,6 +25,16 @@ use std::ops::Range;
 
 use itertools::Itertools;
 
+fn find_contains(r1: Range<i32>, r2: Range<i32>) -> u32 {
+    if r1.contains(&r2.start) && r1.contains(&r2.end)
+        || r2.contains(&r1.start) && r2.contains(&r1.end)
+    {
+        1
+    } else {
+        0
+    }
+}
+
 fn parse_to_range(s: &str) -> Option<Range<i32>> {
     let pair: (i32, i32) = s
         .split('-')
@@ -35,18 +45,18 @@ fn parse_to_range(s: &str) -> Option<Range<i32>> {
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    let seperated_pairs: Vec<_> = input
+    let result = input
         .lines()
-        .map(|line| {
+        .filter_map(|line| {
             let pair: Option<(&str, &str)> = line.split(',').collect_tuple();
-            let parsed_range = match pair {
-                Some(p) => (parse_to_range(p.0), parse_to_range(p.1)),
-                None => panic!("No pair found!"),
-            };
+            pair.map(|(a, b)| (parse_to_range(a), parse_to_range(b)))
         })
-        .collect();
-
-    todo!()
+        .filter_map(|(a, b)| match (a, b) {
+            (Some(r1), Some(r2)) => Some(find_contains(r1, r2)),
+            _ => None,
+        })
+        .sum();
+    result
 }
 
 #[cfg(test)]
@@ -70,6 +80,13 @@ mod tests {
         assert_eq!(parse_to_range("2-5"), Some(2..5));
     }
 
+    #[test]
+    fn find_overlap_test() {
+        // assert_eq!(find_contains(2..7, 3..6), 1);
+        // assert_eq!(find_contains(3..7, 3..6), 1);
+        // assert_eq!(find_contains(3..4, 3..6), 1);
+        assert_eq!(find_contains(6..6, 4..6), 1);
+    }
     // #[test]
     // fn test_day1_part2() {
     //     assert_eq!(process_part2(INPUT), 45000);
