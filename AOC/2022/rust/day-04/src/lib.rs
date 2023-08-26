@@ -1,14 +1,3 @@
-// find complete overlap
-// range rust
-// https://doc.rust-lang.org/std/ops/struct.Range.html
-// make 2 ranges -> rang1 and range 2
-// range1.contains rang2.start && range2.end
-//eazy peasy?
-//
-//steps: split at ,
-//convert 2-3 to a tuple ;
-//implement tryFrom for Range (value:(i32,i32)) -> Result<Self,Self::Error>
-
 /* https://docs.rs/nom/latest/nom/combinator/fn.map_res.html */
 // https://github.com/rust-bakery/nom/blob/main/doc/choosing_a_combinator.md
 // https://docs.rs/nom/latest/nom/#traits
@@ -43,6 +32,10 @@ fn parse_to_range(s: &str) -> Option<RangeInclusive<i32>> {
         .and_then(|(start, end)| Some(start?..=end?))
 }
 
+// single filter map
+// We have an Option that contains a tuple (a, b), where a and b are themselves of type Option<RangeInclusive<i32>>.
+// Inside the closure passed to and_then, we try to unpack the values inside a and b using the ? operator.
+// If either a or b is None, the use of the ? operator will immediately result in the entire closure returning None.
 pub fn process_part1(input: &str) -> u32 {
     input
         .lines()
