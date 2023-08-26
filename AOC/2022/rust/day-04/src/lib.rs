@@ -15,6 +15,7 @@ use std::ops::RangeInclusive;
 use itertools::Itertools;
 
 fn find_contains(r1: RangeInclusive<i32>, r2: RangeInclusive<i32>) -> u32 {
+    dbg!(&r1, &r1);
     if r1.contains(&r2.start()) && r1.contains(&r2.end())
         || r2.contains(&r1.start()) && r2.contains(&r1.end())
     {
