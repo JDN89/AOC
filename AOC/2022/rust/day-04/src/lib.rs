@@ -21,13 +21,13 @@
 //
 //implement nom also, just do both fo the fun of it
 
-use std::ops::Range;
+use std::ops::RangeInclusive;
 
 use itertools::Itertools;
 
-fn find_contains(r1: Range<i32>, r2: Range<i32>) -> u32 {
-    if r1.contains(&r2.start) && r1.contains(&r2.end)
-        || r2.contains(&r1.start) && r2.contains(&r1.end)
+fn find_contains(r1: RangeInclusive<i32>, r2: RangeInclusive<i32>) -> u32 {
+    if r1.contains(&r2.start()) && r1.contains(&r2.end())
+        || r2.contains(&r1.start()) && r2.contains(&r1.end())
     {
         1
     } else {
@@ -35,13 +35,13 @@ fn find_contains(r1: Range<i32>, r2: Range<i32>) -> u32 {
     }
 }
 
-fn parse_to_range(s: &str) -> Option<Range<i32>> {
+fn parse_to_range(s: &str) -> Option<RangeInclusive<i32>> {
     let pair: (i32, i32) = s
         .split('-')
         .map(|p| p.parse::<i32>().expect("Unable to parse str to i32"))
         .collect_tuple()
         .expect("didn't receive a pair in the String");
-    Some(pair.0..pair.1)
+    Some(pair.0..=pair.1)
 }
 
 pub fn process_part1(input: &str) -> u32 {
@@ -77,7 +77,7 @@ mod tests {
     }
     #[test]
     fn pare_to_range_test() {
-        assert_eq!(parse_to_range("2-5"), Some(2..5));
+        assert_eq!(parse_to_range("2-5"), Some(2..=5));
     }
 
     #[test]
@@ -85,11 +85,10 @@ mod tests {
         // assert_eq!(find_contains(2..7, 3..6), 1);
         // assert_eq!(find_contains(3..7, 3..6), 1);
         // assert_eq!(find_contains(3..4, 3..6), 1);
-        assert_eq!(find_contains(6..6, 4..6), 1);
+        assert_eq!(find_contains(6..=6, 4..=6), 1);
     }
     // #[test]
     // fn test_day1_part2() {
     //     assert_eq!(process_part2(INPUT), 45000);
     // }
 }
-
