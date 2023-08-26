@@ -35,28 +35,24 @@ fn find_contains(r1: RangeInclusive<i32>, r2: RangeInclusive<i32>) -> u32 {
     }
 }
 
+//ok() converts result to an option
 fn parse_to_range(s: &str) -> Option<RangeInclusive<i32>> {
-    let pair: (i32, i32) = s
-        .split('-')
-        .map(|p| p.parse::<i32>().expect("Unable to parse str to i32"))
+    s.split('-')
+        .map(|p| p.parse::<i32>().ok())
         .collect_tuple()
-        .expect("didn't receive a pair in the String");
-    Some(pair.0..=pair.1)
+        .and_then(|(start, end)| Some(start?..=end?))
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    let result = input
+    input
         .lines()
         .filter_map(|line| {
-            let pair: Option<(&str, &str)> = line.split(',').collect_tuple();
-            pair.map(|(a, b)| (parse_to_range(a), parse_to_range(b)))
+            line.split(',')
+                .map(parse_to_range)
+                .collect_tuple()
+                .and_then(|(a, b)| Some(find_contains(a?, b?)))
         })
-        .filter_map(|(a, b)| match (a, b) {
-            (Some(r1), Some(r2)) => Some(find_contains(r1, r2)),
-            _ => None,
-        })
-        .sum();
-    result
+        .sum()
 }
 
 #[cfg(test)]
