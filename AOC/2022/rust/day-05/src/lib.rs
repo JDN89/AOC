@@ -13,6 +13,10 @@ use nom::{
     IResult,
 };
 
+//parse crate -> [A] Option crate
+//parse hole -> "    " return none
+//parse crate or hole -> option &char
+
 fn parse_crate(input: &str) -> IResult<&str, Option<&str>> {
     let (input, c) = alt((tag("    "), delimited(char('['), alpha1, char(']'))))(input)?;
 
