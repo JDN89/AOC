@@ -39,6 +39,7 @@ fn parse_crate_or_hole(input: &str) -> IResult<&str, Option<&str>> {
 // crates and holes are seperated by single spaces
 // so now we have to parse a crate or a hole and discard the single spaces (remaining input)
 // and collect the crates in a vector
+// . These spaces are "consumed" in the sense that the parser moves past them during its operation, but they are not included in the final output of the function.
 fn parse_crate_line(i: &str) -> IResult<&str, Vec<Option<&str>>> {
     separated_list1(tag(" "), parse_crate_or_hole)(i)
 }
