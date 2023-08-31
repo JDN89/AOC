@@ -13,7 +13,7 @@
 //
 use nom::branch::alt;
 use nom::character::complete::{alpha1, multispace1};
-use nom::multi::many0;
+use nom::multi::{many0, separated_list1};
 use nom::sequence::preceded;
 use nom::{
     bytes::complete::tag,
@@ -23,18 +23,27 @@ use nom::{
     IResult,
 };
 
-todo!()
 // how do i return nothing instead of an empty string?
 fn parse_crate(input: &str) -> IResult<&str, &str> {
     delimited(char('['), alpha1, char(']'))(input)
 }
 
-fn parse_hole(input: &str) -> IResult<&str, &str> {
-    map(multispace1, |_| "")(input)
+fn parse_hole(i: &str) -> IResult<&str, ()> {
+    map(tag("   "), drop)(i)
 }
-fn parse_crate_or_hole(input: &str) -> IResult<&str, Vec<&str>> {
-    many0(alt((parse_crate, parse_hole)))(input)
+
+fn parse_crate_or_hole(input: &str) -> IResult<&str, Option<&str>> {
+    alt((map(parse_crate, Some), map(parse_hole, |_| None)))(input)
 }
+
+// crates and holes are seperated by single spaces
+// so now we have to parse a crate or a hole and discard the single spaces (remaining input)
+// and collect the crates in a vector
+fn parse_crate_line(i: &str) -> IResult<&str, Vec<Option<&str>>> {
+    separated_list1(tag(" "), parse_crate_or_hole)(i)
+}
+
+// write transpose function
 
 pub fn process_part1(input: &str) -> &str {
     todo!()
