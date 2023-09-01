@@ -1,3 +1,4 @@
+
 // parse extern crate
 // parse hole: 3 spaces
 // parse crate and hole
@@ -11,17 +12,54 @@
 //
 //Transposing a matrix means flipping it over its diagonal, which in turn means swapping the row and column indices for each element. In other words, the element that was in the ith row and jth column of the original matrix will end up in the jth row and ith column of the transposed matrix.
 //
+//I don't think i need to parse the crate numbers, I can use the indexes
+//
+//I need to parse the instrucations tough
 use nom::branch::alt;
-use nom::character::complete::{alpha1, multispace1};
-use nom::multi::{many0, separated_list1};
-use nom::sequence::preceded;
+use nom::character::complete::{alpha1,  digit1 };
+use nom::combinator::map_res;
+use nom::multi::separated_list1;
+use nom::sequence::{preceded, tuple};
 use nom::{
     bytes::complete::tag,
-    character::complete::{anychar, char},
+    character::complete::char,
     combinator::map,
     sequence::delimited,
     IResult,
 };
+
+#[derive(Debug)]
+struct MoveOperation {
+    amount: usize,
+    from: usize,
+    to: usize,
+}
+impl TryFrom<(usize, usize, usize)> for MoveOperation {
+    type Error = String;
+
+    fn try_from(tuple: (usize, usize, usize)) -> Result<Self, Self::Error> {
+        let (amount, from, to) = tuple;
+        Ok(MoveOperation { amount, from, to })
+    }
+}
+
+fn parse_number(input: &str) -> IResult<&str, usize> {
+    map_res(digit1, |s: &str| s.parse::<usize>())(input)
+}
+
+// -1 because we use indexes
+fn parse_pile_number(input: &str) -> IResult<&str, usize> {
+    map(parse_number, |n|   n - 1)(input)
+}
+
+fn parse_move_operation(i: &str) -> IResult<&str, Result<MoveOperation, String>> {
+    let parser = tuple((
+        preceded(tag("move"), parse_number),
+
+
+    ))
+    todo!()
+}
 
 // how do i return nothing instead of an empty string?
 fn parse_crate(input: &str) -> IResult<&str, &str> {
