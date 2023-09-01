@@ -66,28 +66,32 @@ move 2 from 2 to 1
 move 1 from 1 to 2";
     const CRATE_OR_HOLE: &str = "    [D]    ";
 
-    /* #[test]
-    fn test_day1_part1() {
-        assert_eq!(process_part1(INPUT), "CMZ");
-    } */
-
     #[test]
     fn test_parse_crate() {
         assert_eq!(parse_crate("[A]"), Ok(("", ("A"))));
     }
+
     #[test]
     fn test_parse_hole() {
-        assert_eq!(parse_hole("    [A]"), Ok(("[A]", "")));
+        assert_eq!(parse_hole("   "), Ok(("", ())));
+        assert_eq!(parse_hole("    "), Ok((" ", ())));
     }
     #[test]
     fn test_parse_crate_or_hole() {
+        assert_eq!(parse_crate_or_hole("[A]"), Ok(("", Some("A"))));
+        assert_eq!(parse_crate_or_hole("   "), Ok(("", None)));
+    }
+    #[test]
+    fn test_parse_crate_line() {
         assert_eq!(
-            parse_crate_or_hole("[N] [C]    "),
-            Ok(("", vec!["N", "", "C", ""]))
+            parse_crate_line("[A] [B]     [C]"),
+            Ok(("", vec![Some("A"), Some("B"), None, Some("C")]))
         );
+        assert_eq!(parse_crate_line("[A]    "), Ok(("", vec![Some("A"), None])));
         assert_eq!(
-            parse_crate_or_hole(CRATE_OR_HOLE),
-            Ok(("", vec!["", "D", ""]))
+            parse_crate_line("[A]     [B]"),
+            Ok(("", vec![Some("A"), None, Some("B")]))
         );
+        assert_eq!(parse_crate_line("    [A]"), Ok(("", vec![None, Some("A")])));
     }
 }
