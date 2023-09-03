@@ -89,7 +89,16 @@ pub fn process_part1(input: &str) -> &str {
         }
     });
 
-    dbg!(crate_lines);
+    let mut filtered_crate_lines = vec![];
+    for vec in &mut crate_lines {
+        let new = vec
+            .iter()
+            .filter_map(|&option| option)
+            .collect::<Vec<&str>>();
+        filtered_crate_lines.push(new)
+    }
+
+    dbg!(filtered_crate_lines);
 
     "hello"
 }
