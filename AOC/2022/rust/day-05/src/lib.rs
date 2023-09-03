@@ -16,7 +16,7 @@
 //I need to parse the instrucations tough
 use nom::branch::alt;
 use nom::character::complete::{alpha1, digit1};
-use nom::combinator::map_res;
+use nom::combinator::{all_consuming, map_res};
 use nom::multi::separated_list1;
 use nom::sequence::{preceded, tuple};
 use nom::{
@@ -81,8 +81,16 @@ fn parse_crate_line(i: &str) -> IResult<&str, Vec<Option<&str>>> {
 // write transpose function
 
 pub fn process_part1(input: &str) -> &str {
-    let res: Vec<_> = input.lines().collect();
-    dbg!(res);
+    let mut crate_lines = vec![];
+
+    input.lines().for_each(|line| {
+        if let Ok((_rest, crate_line)) = all_consuming(parse_crate_line)(line) {
+            crate_lines.push(crate_line);
+        }
+    });
+
+    dbg!(crate_lines);
+
     "hello"
 }
 
@@ -150,4 +158,3 @@ move 1 from 1 to 2";
         );
     }
 }
-
