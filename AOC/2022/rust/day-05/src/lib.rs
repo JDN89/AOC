@@ -1,4 +1,3 @@
-
 // parse extern crate
 // parse hole: 3 spaces
 // parse crate and hole
@@ -16,24 +15,21 @@
 //
 //I need to parse the instrucations tough
 use nom::branch::alt;
-use nom::character::complete::{alpha1,  digit1 };
+use nom::character::complete::{alpha1, digit1};
 use nom::combinator::map_res;
 use nom::multi::separated_list1;
 use nom::sequence::{preceded, tuple};
 use nom::{
-    bytes::complete::tag,
-    character::complete::char,
-    combinator::map,
-    sequence::delimited,
-    IResult,
+    bytes::complete::tag, character::complete::char, combinator::map, sequence::delimited, IResult,
 };
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 struct MoveOperation {
     amount: usize,
     from: usize,
     to: usize,
 }
+
 impl TryFrom<(usize, usize, usize)> for MoveOperation {
     type Error = String;
 
@@ -49,16 +45,16 @@ fn parse_number(input: &str) -> IResult<&str, usize> {
 
 // -1 because we use indexes
 fn parse_pile_number(input: &str) -> IResult<&str, usize> {
-    map(parse_number, |n|   n - 1)(input)
+    map(parse_number, |n| n - 1)(input)
 }
 
 fn parse_move_operation(i: &str) -> IResult<&str, Result<MoveOperation, String>> {
     let parser = tuple((
         preceded(tag("move"), parse_number),
-
-
-    ))
-    todo!()
+        preceded(tag("from"), parse_pile_number),
+        preceded(tag("to"), parse_pile_number),
+    ));
+    map(parser, |tuple| MoveOperation::try_from(tuple))(i)
 }
 
 // how do i return nothing instead of an empty string?
@@ -131,5 +127,19 @@ move 1 from 1 to 2";
             Ok(("", vec![Some("A"), None, Some("B")]))
         );
         assert_eq!(parse_crate_line("    [A]"), Ok(("", vec![None, Some("A")])));
+    }
+    #[test]
+    fn test_parse_move_operation() {
+        assert_eq!(
+            parse_move_operation("move 1 from 2 to 1"),
+            Ok((
+                "",
+                Ok(MoveOperation {
+                    amount: 1,
+                    from: 1,
+                    to: 0
+                })
+            ))
+        );
     }
 }
