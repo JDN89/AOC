@@ -32,6 +32,12 @@ Hard: 22,15,19,16
 ? on option value passes the wrapped value to the calling function and returns early if the wrapped value is None
 
 ## Day 5:
+
+- When I use map, I should `collect` the result or otherwise the iterator won't get CONSUMED
+    - Iterators are lazy, meaning the compuation won't be preformed until you consume the iterator with `.collect()`
+- An alternitive is using the for each method or a for loop
+
+
 use nom:
 
  - [nom combinators] (https://docs.rs/nom/latest/nom/combinator/fn.map_res.html)
