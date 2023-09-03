@@ -50,9 +50,9 @@ fn parse_pile_number(input: &str) -> IResult<&str, usize> {
 
 fn parse_move_operation(i: &str) -> IResult<&str, Result<MoveOperation, String>> {
     let parser = tuple((
-        preceded(tag("move"), parse_number),
-        preceded(tag("from"), parse_pile_number),
-        preceded(tag("to"), parse_pile_number),
+        preceded(tag("move "), parse_number),
+        preceded(tag(" from "), parse_pile_number),
+        preceded(tag(" to "), parse_pile_number),
     ));
     map(parser, |tuple| MoveOperation::try_from(tuple))(i)
 }
