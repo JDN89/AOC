@@ -81,7 +81,9 @@ fn parse_crate_line(i: &str) -> IResult<&str, Vec<Option<&str>>> {
 // write transpose function
 
 pub fn process_part1(input: &str) -> &str {
-    todo!()
+    let res: Vec<_> = input.lines().collect();
+    dbg!(res);
+    "hello"
 }
 
 #[cfg(test)]
@@ -99,6 +101,11 @@ move 3 from 1 to 3
 move 2 from 2 to 1
 move 1 from 1 to 2";
     const CRATE_OR_HOLE: &str = "    [D]    ";
+
+    #[test]
+    fn test_process_part1() {
+        assert_eq!(process_part1(INPUT), ("CMZ"));
+    }
 
     #[test]
     fn test_parse_crate() {
@@ -143,3 +150,4 @@ move 1 from 1 to 2";
         );
     }
 }
+
