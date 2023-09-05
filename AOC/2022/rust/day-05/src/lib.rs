@@ -79,6 +79,24 @@ fn parse_crate_line(i: &str) -> IResult<&str, Vec<Option<&str>>> {
 }
 
 // write transpose function
+fn transpose<T: Clone>(input: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
+    let rows = input.len();
+    let cols = input[0].len();
+
+    let mut transposed = Vec::new();
+
+    for j in 0..cols {
+        let mut new_row = Vec::new();
+        for i in 0..rows {
+            if let Some(value) = input[i][j].as_ref() {
+                new_row.push(value.clone());
+            }
+        }
+        transposed.push(new_row);
+    }
+
+    transposed
+}
 
 pub fn process_part1(input: &str) -> &str {
     let mut crate_lines = vec![];
@@ -89,17 +107,9 @@ pub fn process_part1(input: &str) -> &str {
         }
     });
 
-    let mut filtered_crate_lines = vec![];
-    for vec in &mut crate_lines {
-        let new = vec
-            .iter()
-            .filter_map(|&option| option)
-            .collect::<Vec<&str>>();
-        filtered_crate_lines.push(new)
-    }
+    let transposed = transpose(crate_lines);
 
-    dbg!(filtered_crate_lines);
-
+    dbg!(transposed);
     "hello"
 }
 
@@ -107,7 +117,6 @@ pub fn process_part1(input: &str) -> &str {
 mod tests {
     use super::*;
 
-    // Define a constant input for ease of use
     const INPUT: &str = "    [D]    
 [N] [C]    
 [Z] [M] [P]
@@ -117,7 +126,6 @@ move 1 from 2 to 1
 move 3 from 1 to 3
 move 2 from 2 to 1
 move 1 from 1 to 2";
-    const CRATE_OR_HOLE: &str = "    [D]    ";
 
     #[test]
     fn test_process_part1() {
@@ -165,5 +173,18 @@ move 1 from 1 to 2";
                 })
             ))
         );
+    }
+
+    #[test]
+    fn test_transpose() {
+        let matrix: Vec<Vec<Option<i32>>> = vec![
+            vec![Some(1), Some(2), Some(3)],
+            vec![Some(4), Some(5), Some(6)],
+            vec![Some(7), Some(8), Some(9)],
+        ];
+
+        let expected = vec![vec![1, 4, 7], vec![2, 5, 8], vec![3, 6, 9]];
+
+        assert_eq!(transpose(matrix), expected);
     }
 }
