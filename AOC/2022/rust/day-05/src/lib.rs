@@ -110,7 +110,13 @@ pub fn process_part1(input: &str) -> &str {
         }
     });
 
-    let mut transposed_crate_stacks = transpose(crate_lines);
+    let mut transposed_crate_stacks: Vec<Vec<&str>> = transpose(crate_lines)
+        .into_iter()
+        .map(|mut stack| {
+            stack.reverse();
+            stack
+        })
+        .collect();
 
     let mut move_instructions = vec![];
 
