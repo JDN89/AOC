@@ -79,6 +79,7 @@ fn parse_crate_line(i: &str) -> IResult<&str, Vec<Option<&str>>> {
 }
 
 // write transpose function
+// implement clone trait
 fn transpose<T: Clone>(input: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
     let rows = input.len();
     let cols = input[0].len();
@@ -88,6 +89,7 @@ fn transpose<T: Clone>(input: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
     for j in 0..cols {
         let mut new_row = Vec::new();
         for i in 0..rows {
+            //check if input[i] [j] contains a Some(value) -> filter out none and push the values
             if let Some(value) = input[i][j].as_ref() {
                 new_row.push(value.clone());
             }
@@ -102,6 +104,7 @@ pub fn process_part1(input: &str) -> &str {
     let mut crate_lines = vec![];
 
     input.lines().for_each(|line| {
+        // if _rest,crate line is result of parser ->execute code block
         if let Ok((_rest, crate_line)) = all_consuming(parse_crate_line)(line) {
             crate_lines.push(crate_line);
         }
@@ -110,6 +113,15 @@ pub fn process_part1(input: &str) -> &str {
     let transposed = transpose(crate_lines);
 
     dbg!(transposed);
+    let mut move_instrucions = vec![];
+
+    input.lines().for_each(|line| {
+        if let Ok((_rest, move_instruction)) = all_consuming(parse_move_operation)(line) {
+            move_instrucions.push(move_instruction)
+        }
+    });
+    dbg!(move_instrucions);
+
     "hello"
 }
 
