@@ -100,7 +100,7 @@ fn transpose<T: Clone>(input: Vec<Vec<Option<T>>>) -> Vec<Vec<T>> {
     transposed
 }
 
-pub fn process_part1(input: &str) -> &str {
+pub fn process_part1(input: &str) -> String {
     let mut crate_lines = vec![];
 
     input.lines().for_each(|line| {
@@ -118,13 +118,17 @@ pub fn process_part1(input: &str) -> &str {
         })
         .collect();
 
-    let mut move_instructions = vec![];
-
-    input.lines().for_each(|line| {
-        if let Ok((_rest, move_instruction)) = all_consuming(parse_move_operation)(line) {
-            move_instructions.push(move_instruction)
-        }
-    });
+    // Parse move instructions
+    let move_instructions: Vec<_> = input
+        .lines()
+        // closure provided to filter map return Option -> we keep the value from some and filter out None
+        .filter_map(|line| {
+            all_consuming(parse_move_operation)(line)
+                // ok to convert Result to Option!!
+                .ok()
+                .map(|(_rest, instr)| instr)
+        })
+        .collect();
 
     for mve in move_instructions {
         dbg!(&mve);
@@ -143,8 +147,13 @@ pub fn process_part1(input: &str) -> &str {
             _ => (),
         }
     }
-    dbg!(transposed_crate_stacks);
-    "hello"
+    let mut result = String::new();
+    for stack in &mut transposed_crate_stacks {
+        if let Some(crate_str) = stack.pop() {
+            result.push_str(crate_str);
+        }
+    }
+    result
 }
 
 #[cfg(test)]
