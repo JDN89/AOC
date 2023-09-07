@@ -110,18 +110,34 @@ pub fn process_part1(input: &str) -> &str {
         }
     });
 
-    let transposed = transpose(crate_lines);
+    let mut transposed_crate_stacks = transpose(crate_lines);
 
-    dbg!(transposed);
-    let mut move_instrucions = vec![];
+    let mut move_instructions = vec![];
 
     input.lines().for_each(|line| {
         if let Ok((_rest, move_instruction)) = all_consuming(parse_move_operation)(line) {
-            move_instrucions.push(move_instruction)
+            move_instructions.push(move_instruction)
         }
     });
-    dbg!(move_instrucions);
 
+    for mve in move_instructions {
+        dbg!(&mve);
+        match mve {
+            Ok(mve) => {
+                for _ in 0..mve.amount {
+                    if let Some(cr) = transposed_crate_stacks[mve.from].pop() {
+                        // dbg!(cr);
+                        transposed_crate_stacks[mve.to].push(cr);
+                    } else {
+                        println!("nothing here");
+                        break;
+                    }
+                }
+            }
+            _ => (),
+        }
+    }
+    dbg!(transposed_crate_stacks);
     "hello"
 }
 
