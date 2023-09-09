@@ -37,6 +37,15 @@ Hard: 22,15,19,16
     - Iterators are lazy, meaning the compuation won't be preformed until you consume the iterator with `.collect()`
 - An alternitive is using the for each method or a for loop
 
+## Day 6:
+- .iter().collect() -> `iter()` yields all the elements from the slice -> `collect()` to collect into a new data strucutre
+- cargo install cargo-nextest: install better testing tool as binary on my system. now `cargo-nextest` is a cli tool and command
+    - [cargo nextest syntax] (https://github.com/frondeus/test-case/wiki/Syntax)
+- as_bytes()
+    - Character level (Unicode scalar values): This is when you're interested in processing individual characters, taking into account their Unicode representation. This might be important when you're handling text data that needs to be interpreted according to its meaning in human languages. In Rust, you can iterate over a string's characters using the .chars() method.
+    - Byte level: This is when you're interested in processing the raw byte representation of the string, without any special consideration for Unicode scalar values. This approach can be useful when you're dealing with data that's primarily ASCII (where each character is one byte) or when you're interested in the byte-by-byte layout of the string in memory, irrespective of its meaning in human languages. In Rust, you can get the byte representation of a string using the .as_bytes() method.
+
+
 
 use nom:
 
