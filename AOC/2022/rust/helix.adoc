@@ -1,1 +1,17 @@
 = Title
+
+== commands
+* C-z put in background
+** fg open again
+* :sh execute shell command
+
+
+
+
+== terminal tools
+* fzf
+* lf
+** terminal file manger tool
+* learn about grep and pipe
+* learn how to use fzf with z
+
