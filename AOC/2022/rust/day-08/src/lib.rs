@@ -48,7 +48,7 @@ pub fn process_part1(input: &str) -> Option<u32> {
 
     // instantiate a vec of vec of booleans fo the same size and set all the trees to true
     // iteratie left to right and right to left
-    // itereate top to bottom and bottom to top
+    // itereate top to bottom and bottom totop
     // set the trees that are ont visible to false
     // loop over grid and count number of trees that is said to true
 

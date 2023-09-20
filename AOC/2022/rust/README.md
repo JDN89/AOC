@@ -45,6 +45,12 @@ Hard: 22,15,19,16
     - Character level (Unicode scalar values): This is when you're interested in processing individual characters, taking into account their Unicode representation. This might be important when you're handling text data that needs to be interpreted according to its meaning in human languages. In Rust, you can iterate over a string's characters using the .chars() method.
     - Byte level: This is when you're interested in processing the raw byte representation of the string, without any special consideration for Unicode scalar values. This approach can be useful when you're dealing with data that's primarily ASCII (where each character is one byte) or when you're interested in the byte-by-byte layout of the string in memory, irrespective of its meaning in human languages. In Rust, you can get the byte representation of a string using the .as_bytes() method.
 
+## Day 8:
+- learned about dereferencing: dereference a ref to assign it's underlying value to a new var;
+- chatgpt: imagine having a book
+    - A reference (&T) is like having a bookmark in the book, it tells you where the content is, but it isn't the content itself.
+    - Dereferencing (*): opening the book at the bookmark and reading the contents
+- .iter().enumerate(): called on iterators and return iter that gives you tuple (index,val) for each item in the original iterator.   
 
 
 use nom:
