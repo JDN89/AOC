@@ -1,7 +1,36 @@
-fn iterate_left_to_right(trees: &Vec<Vec<u32>>, visible_trees: &Vec<Vec<bool>>) -> Vec<Vec<bool>> {
-    for row in trees {
-        for &tree in row {
-            dbg!(tree);
+fn iterate_left_to_right(
+    trees: &Vec<Vec<u32>>,
+    visible_trees: &mut Vec<Vec<bool>>,
+) -> Vec<Vec<bool>> {
+    let mut previous_tree = 0;
+    for (y, row) in trees.iter().enumerate() {
+        'inner: for (x, curr_tree) in row.iter().enumerate() {
+            if curr_tree > &previous_tree {
+                previous_tree = *curr_tree
+            } else {
+                visible_trees[y][x] = false;
+                break 'inner;
+            }
+
+            // dbg!("rij {} waarde{}, kolom{} waarde {}", x, row, y, col);
+        }
+    }
+    visible_trees.to_owned()
+}
+
+fn iterate_right_to_left(
+    trees: &Vec<Vec<u32>>,
+    visible_trees: &mut Vec<Vec<bool>>,
+) -> Vec<Vec<bool>> {
+    let mut previous_tree = 0;
+    for (y, row) in trees.iter().enumerate() {
+        'inner: for (x, curr_tree) in row.iter().rev().enumerate() {
+            if curr_tree > &previous_tree {
+                previous_tree = *curr_tree
+            } else {
+                visible_trees[y][x] = false;
+                break 'inner;
+            }
         }
     }
     visible_trees.to_owned()
@@ -50,6 +79,11 @@ mod tests {
         &[true, true, false],
         &[true, true, true],
     ];
+    const VISIBLE_TREES_RIGHT_TO_LEFT: &[&[bool]] = &[
+        &[true, false, true],
+        &[false, true, true],
+        &[true, false, true],
+    ];
 
     #[test]
     fn test_day1_part1() {
@@ -60,10 +94,20 @@ mod tests {
     fn test_iterate_left_to_right() {
         let input = vec![vec![1, 2, 3], vec![4, 5, 3], vec![7, 8, 9]];
 
-        let visible_trees = vec![vec![true; input[0].len()]; input.len()];
+        let mut visible_trees = vec![vec![true; input[0].len()]; input.len()];
         assert_eq!(
-            iterate_left_to_right(&input, &visible_trees),
+            iterate_left_to_right(&input, &mut visible_trees),
             VISIBLE_TREES_LEFT_TO_RIGHT
+        );
+    }
+    #[test]
+    fn test_right_to_left() {
+        let input = vec![vec![1, 2, 3], vec![4, 5, 3], vec![7, 8, 9]];
+
+        let mut visible_trees = vec![vec![true; input[0].len()]; input.len()];
+        assert_eq!(
+            iterate_right_to_left(&input, &mut visible_trees),
+            VISIBLE_TREES_RIGHT_TO_LEFT
         );
     }
 }
