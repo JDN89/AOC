@@ -4,6 +4,7 @@ fn iterate_left_to_right(
 ) -> Vec<Vec<bool>> {
     let mut previous_tree = 0;
     for (y, row) in trees.iter().enumerate() {
+        previous_tree = 0;
         'inner: for (x, curr_tree) in row.iter().enumerate() {
             if curr_tree > &previous_tree {
                 previous_tree = *curr_tree
@@ -24,6 +25,7 @@ fn iterate_right_to_left(
 ) -> Vec<Vec<bool>> {
     let mut previous_tree = 0;
     for (y, row) in trees.iter().enumerate() {
+        previous_tree = 0;
         'inner: for (x, curr_tree) in row.iter().rev().enumerate() {
             if curr_tree > &previous_tree {
                 previous_tree = *curr_tree
