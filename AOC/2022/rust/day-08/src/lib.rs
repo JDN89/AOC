@@ -97,26 +97,20 @@ mod tests {
         static ref INITIAL: Vec<Vec<bool>> = vec![vec![true; 5]; 5];
     }
 
-    const VISIBLE_TREES_LEFT_TO_RIGHT: &[&[bool]] = &[
-        &[true, true, true],
-        &[true, true, false],
-        &[true, true, true],
-    ];
-
-    const VISIBLE_TREES_RIGHT_TO_LEFT: &[&[bool]] = &[
-        &[true, false, true],
-        &[false, true, true],
-        &[true, false, true],
-    ];
-
     #[test]
     fn test_day1_part1() {
         assert_eq!(process_part1(INPUT), Some(21));
     }
 
+    const VISIBLE_TREES_LEFT_TO_RIGHT: &[&[bool]] = &[
+        &[true, true, true],
+        &[true, false, true],
+        &[true, true, true],
+    ];
+
     #[test]
     fn test_iterate_left_to_right() {
-        let input = vec![vec![1, 2, 3], vec![4, 5, 3], vec![7, 8, 9]];
+        let input = vec![vec![1, 2, 3], vec![6, 5, 3], vec![7, 8, 9]];
 
         let mut visible_trees = vec![vec![true; input[0].len()]; input.len()];
         assert_eq!(
@@ -124,6 +118,13 @@ mod tests {
             VISIBLE_TREES_LEFT_TO_RIGHT
         );
     }
+
+    const VISIBLE_TREES_RIGHT_TO_LEFT: &[&[bool]] = &[
+        &[true, false, true],
+        &[false, true, true],
+        &[true, false, true],
+    ];
+
     #[test]
     fn test_right_to_left() {
         let input = vec![vec![1, 2, 3], vec![4, 5, 3], vec![7, 8, 9]];
