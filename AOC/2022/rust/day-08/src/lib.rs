@@ -41,9 +41,19 @@ fn iterate_top_to_bottom(
     visible_trees: &mut Vec<Vec<bool>>,
 ) -> Vec<Vec<bool>> {
     let mut previous_tree = 0;
-    for (y, row) in trees.iter().enumerate() {
-        dbg!(row[0]);
+
+    for x in 0..trees[0].len() {
+        previous_tree = 0;
+        'inner: for (y, row) in trees.iter().enumerate() {
+            if row[x] > previous_tree {
+                previous_tree = row[x]
+            } else {
+                visible_trees[y][x] = false;
+                break 'inner;
+            }
+        }
     }
+
     visible_trees.to_owned()
 }
 
@@ -97,12 +107,6 @@ mod tests {
         &[true, false, true],
     ];
 
-    const VISIBLE_TREES_TOP_TO_BOTTOM: &[&[bool]] = &[
-        &[true, true, true],
-        &[true, true, false],
-        &[true, true, true],
-    ];
-
     #[test]
     fn test_day1_part1() {
         assert_eq!(process_part1(INPUT), Some(21));
@@ -128,6 +132,12 @@ mod tests {
             VISIBLE_TREES_RIGHT_TO_LEFT
         );
     }
+
+    const VISIBLE_TREES_TOP_TO_BOTTOM: &[&[bool]] = &[
+        &[true, true, true],
+        &[true, true, false],
+        &[true, true, true],
+    ];
 
     #[test]
     fn test_top_to_bottom() {
