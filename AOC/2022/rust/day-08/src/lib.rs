@@ -12,8 +12,6 @@ fn iterate_left_to_right(
                 visible_trees[y][x] = false;
                 break 'inner;
             }
-
-            // dbg!("rij {} waarde{}, kolom{} waarde {}", x, row, y, col);
         }
     }
     visible_trees.to_owned()
@@ -23,12 +21,12 @@ fn iterate_right_to_left(
     trees: &Vec<Vec<u32>>,
     visible_trees: &mut Vec<Vec<bool>>,
 ) -> Vec<Vec<bool>> {
-    let mut previous_tree = 0;
+    let mut previous_tree;
     for (y, row) in trees.iter().enumerate() {
         previous_tree = 0;
-        'inner: for (x, curr_tree) in row.iter().rev().enumerate() {
-            if curr_tree > &previous_tree {
-                previous_tree = *curr_tree
+        'inner: for x in (0..row.len()).rev() {
+            if row[x] > previous_tree {
+                previous_tree = row[x]
             } else {
                 visible_trees[y][x] = false;
                 break 'inner;
@@ -42,7 +40,7 @@ fn iterate_top_to_bottom(
     trees: &Vec<Vec<u32>>,
     visible_trees: &mut Vec<Vec<bool>>,
 ) -> Vec<Vec<bool>> {
-    let mut previous_tree = 0;
+    let mut previous_tree;
 
     for x in 0..trees[0].len() {
         previous_tree = 0;
@@ -62,11 +60,12 @@ fn iterate_bottom_to_top(
     trees: &Vec<Vec<u32>>,
     visible_trees: &mut Vec<Vec<bool>>,
 ) -> Vec<Vec<bool>> {
-    let mut previous_tree = 0;
+    let mut previous_tree;
 
-    for x in (0..trees[0].len()).rev() {
+    for x in 0..trees[0].len() {
         previous_tree = 0;
-        'inner: for (y, row) in trees.iter().enumerate() {
+        'inner: for (y, row) in trees.iter().enumerate().rev() {
+            dbg!(row[x]);
             if row[x] > previous_tree {
                 previous_tree = row[x]
             } else {
