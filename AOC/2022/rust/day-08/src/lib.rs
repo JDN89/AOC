@@ -2,7 +2,7 @@ fn iterate_left_to_right(
     trees: &Vec<Vec<u32>>,
     visible_trees: &mut Vec<Vec<bool>>,
 ) -> Vec<Vec<bool>> {
-    let mut previous_tree = 0;
+    let mut previous_tree;
     for (y, row) in trees.iter().enumerate() {
         previous_tree = 0;
         'inner: for (x, curr_tree) in row.iter().enumerate() {
@@ -78,7 +78,7 @@ fn iterate_bottom_to_top(
     visible_trees.to_owned()
 }
 
-pub fn process_part1(input: &str) -> Option<u32> {
+pub fn process_part1(input: &str) -> u32 {
     let trees: Vec<Vec<u32>> = input
         .lines()
         .map(|line| {
@@ -87,17 +87,21 @@ pub fn process_part1(input: &str) -> Option<u32> {
                 .collect::<Vec<u32>>()
         })
         .collect();
-
-    // instantiate a vec of vec of booleans fo the same size and set all the trees to true
-    // iteratie left to right and right to left
-    // itereate top to bottom and bottom totop
-    // set the trees that are ont visible to false
-    // loop over grid and count number of trees that is said to true
-
     let len = trees[0].len();
     let mut visible_trees = vec![vec![true; len]; len];
-
-    Some(3)
+    iterate_left_to_right(&trees, &mut visible_trees);
+    iterate_right_to_left(&trees, &mut visible_trees);
+    iterate_bottom_to_top(&trees, &mut visible_trees);
+    iterate_top_to_bottom(&trees, &mut visible_trees);
+    let mut counter: u32 = 0;
+    for row in visible_trees.iter() {
+        for boolean in row.iter() {
+            if boolean == &true {
+                counter += 1
+            }
+        }
+    }
+    counter
 }
 
 #[cfg(test)]
@@ -118,7 +122,7 @@ mod tests {
 
     #[test]
     fn test_day1_part1() {
-        assert_eq!(process_part1(INPUT), Some(21));
+        assert_eq!(process_part1(INPUT), 21);
     }
 
     const VISIBLE_TREES_LEFT_TO_RIGHT: &[&[bool]] = &[
