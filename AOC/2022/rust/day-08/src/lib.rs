@@ -6,7 +6,7 @@ fn iterate_left_to_right(
     for (y, row) in trees.iter().enumerate() {
         previous_tree = 0;
         'inner: for (x, curr_tree) in row.iter().enumerate() {
-            if x == 0 || x == row.len() - 1 {
+            if x == 0 || x == row.len() - 1 || y == 0 || y == row.len() - 1 {
                 visible_trees[y][x] = true
             }
             if curr_tree > &previous_tree {
@@ -28,7 +28,7 @@ fn iterate_right_to_left(
     for (y, row) in trees.iter().enumerate() {
         previous_tree = 0;
         'inner: for x in (0..row.len()).rev() {
-            if x == 0 || x == row.len() - 1 {
+            if x == 0 || x == row.len() - 1 || y == 0 || y == row.len() - 1 {
                 visible_trees[y][x] = true
             }
             if row[x] > previous_tree {
@@ -51,7 +51,7 @@ fn iterate_top_to_bottom(
     for x in 0..trees[0].len() {
         previous_tree = 0;
         'inner: for (y, row) in trees.iter().enumerate() {
-            if x == 0 || x == row.len() - 1 {
+            if x == 0 || x == row.len() - 1 || y == 0 || y == row.len() - 1 {
                 visible_trees[y][x] = true
             }
             if row[x] > previous_tree {
@@ -74,8 +74,7 @@ fn iterate_bottom_to_top(
     for x in 0..trees[0].len() {
         previous_tree = 0;
         'inner: for (y, row) in trees.iter().enumerate().rev() {
-            dbg!(row[x]);
-            if x == 0 || x == row.len() - 1 {
+            if x == 0 || x == row.len() - 1 || y == 0 || y == row.len() - 1 {
                 visible_trees[y][x] = true
             }
             if row[x] > previous_tree {
@@ -113,13 +112,13 @@ pub fn process_part1(input: &str) -> u32 {
             }
         }
     }
+    dbg!(visible_trees);
     counter
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use lazy_static::lazy_static;
 
     const INPUT: &str = "30373
 25512
@@ -127,13 +126,8 @@ mod tests {
 33549
 35390";
 
-    lazy_static! {
-        static ref GRID: Vec<Vec<u32>> = vec![vec![1, 2, 3], vec![4, 5, 3], vec![7, 8, 9]];
-        static ref INITIAL: Vec<Vec<bool>> = vec![vec![true; 5]; 5];
-    }
-
     #[test]
-    fn test_day1_part1() {
+    fn test_day8_part1() {
         assert_eq!(process_part1(INPUT), 21);
     }
 
