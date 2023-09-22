@@ -51,6 +51,22 @@ Hard: 22,15,19,16
     - A reference (&T) is like having a bookmark in the book, it tells you where the content is, but it isn't the content itself.
     - Dereferencing (*): opening the book at the bookmark and reading the contents
 - .iter().enumerate(): called on iterators and return iter that gives you tuple (index,val) for each item in the original iterator.   
+- found an article that explains how to bench mark your tests
+    - [blog explain bench marks] (https://seenaburns.com/benchmarking-rust-with-cargo-bench)
+    - [rust docs] (https://doc.rust-lang.org/cargo/commands/cargo-bench.html)
+    - I'm using some nightly features so to run the bench mark:  rustup run nightly cargo bench (no need to swithc to nightly)
+- could no longer cargo run because of: #![feature(test)] -> switch to nightly
+    - rustup install nightly
+    - rustup override set nightly
+    - cargo run || cargo bench || cargo test
+    - rustup override set stable -> revert to stable verison
+    - rustup update nightly 
+- possible optimizations:
+    - count inside iter fn how many booleans are true?
+    - don't return visible trees from iter functions -> outer scope no need to return
+    - set outer boundry of grid to true in seperate function, instead of 4 times in iter funcitons
+    - enjoy
+
 
 
 use nom:
