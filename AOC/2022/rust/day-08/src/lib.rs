@@ -2,18 +2,17 @@ fn iterate_left_to_right(
     trees: &Vec<Vec<u32>>,
     visible_trees: &mut Vec<Vec<bool>>,
 ) -> Vec<Vec<bool>> {
-    let mut previous_tree;
+    let mut heighest_tree: u32;
+    let mut highest_tree;
     for (y, row) in trees.iter().enumerate() {
-        previous_tree = 0;
-        'inner: for (x, curr_tree) in row.iter().enumerate() {
+        highest_tree = 0;
+        for (x, curr_tree) in row.iter().enumerate() {
             if x == 0 || x == row.len() - 1 || y == 0 || y == row.len() - 1 {
                 visible_trees[y][x] = true
             }
-            if curr_tree > &previous_tree {
-                previous_tree = *curr_tree;
+            if curr_tree > &highest_tree {
+                highest_tree = *curr_tree;
                 visible_trees[y][x] = true
-            } else {
-                break 'inner;
             }
         }
     }
@@ -24,18 +23,16 @@ fn iterate_right_to_left(
     trees: &Vec<Vec<u32>>,
     visible_trees: &mut Vec<Vec<bool>>,
 ) -> Vec<Vec<bool>> {
-    let mut previous_tree;
+    let mut highest_tree;
     for (y, row) in trees.iter().enumerate() {
-        previous_tree = 0;
-        'inner: for x in (0..row.len()).rev() {
+        highest_tree = 0;
+        for x in (0..row.len()).rev() {
             if x == 0 || x == row.len() - 1 || y == 0 || y == row.len() - 1 {
                 visible_trees[y][x] = true
             }
-            if row[x] > previous_tree {
-                previous_tree = row[x];
+            if row[x] > highest_tree {
+                highest_tree = row[x];
                 visible_trees[y][x] = true
-            } else {
-                break 'inner;
             }
         }
     }
@@ -46,19 +43,17 @@ fn iterate_top_to_bottom(
     trees: &Vec<Vec<u32>>,
     visible_trees: &mut Vec<Vec<bool>>,
 ) -> Vec<Vec<bool>> {
-    let mut previous_tree;
+    let mut highest_tree;
 
     for x in 0..trees[0].len() {
-        previous_tree = 0;
-        'inner: for (y, row) in trees.iter().enumerate() {
+        highest_tree = 0;
+        for (y, row) in trees.iter().enumerate() {
             if x == 0 || x == row.len() - 1 || y == 0 || y == row.len() - 1 {
                 visible_trees[y][x] = true
             }
-            if row[x] > previous_tree {
-                previous_tree = row[x];
+            if row[x] > highest_tree {
+                highest_tree = row[x];
                 visible_trees[y][x] = true
-            } else {
-                break 'inner;
             }
         }
     }
@@ -73,15 +68,13 @@ fn iterate_bottom_to_top(
 
     for x in 0..trees[0].len() {
         previous_tree = 0;
-        'inner: for (y, row) in trees.iter().enumerate().rev() {
+        for (y, row) in trees.iter().enumerate().rev() {
             if x == 0 || x == row.len() - 1 || y == 0 || y == row.len() - 1 {
                 visible_trees[y][x] = true
             }
             if row[x] > previous_tree {
                 previous_tree = row[x];
                 visible_trees[y][x] = true
-            } else {
-                break 'inner;
             }
         }
     }
