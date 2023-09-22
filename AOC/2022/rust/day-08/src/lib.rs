@@ -7,9 +7,9 @@ fn iterate_left_to_right(
         previous_tree = 0;
         'inner: for (x, curr_tree) in row.iter().enumerate() {
             if curr_tree > &previous_tree {
-                previous_tree = *curr_tree
+                previous_tree = *curr_tree;
+                visible_trees[y][x] = true
             } else {
-                visible_trees[y][x] = false;
                 break 'inner;
             }
         }
@@ -26,9 +26,9 @@ fn iterate_right_to_left(
         previous_tree = 0;
         'inner: for x in (0..row.len()).rev() {
             if row[x] > previous_tree {
-                previous_tree = row[x]
+                previous_tree = row[x];
+                visible_trees[y][x] = true
             } else {
-                visible_trees[y][x] = false;
                 break 'inner;
             }
         }
@@ -46,9 +46,9 @@ fn iterate_top_to_bottom(
         previous_tree = 0;
         'inner: for (y, row) in trees.iter().enumerate() {
             if row[x] > previous_tree {
-                previous_tree = row[x]
+                previous_tree = row[x];
+                visible_trees[y][x] = true
             } else {
-                visible_trees[y][x] = false;
                 break 'inner;
             }
         }
@@ -67,9 +67,9 @@ fn iterate_bottom_to_top(
         'inner: for (y, row) in trees.iter().enumerate().rev() {
             dbg!(row[x]);
             if row[x] > previous_tree {
-                previous_tree = row[x]
+                previous_tree = row[x];
+                visible_trees[y][x] = true
             } else {
-                visible_trees[y][x] = false;
                 break 'inner;
             }
         }
@@ -88,7 +88,7 @@ pub fn process_part1(input: &str) -> u32 {
         })
         .collect();
     let len = trees[0].len();
-    let mut visible_trees = vec![vec![true; len]; len];
+    let mut visible_trees = vec![vec![false; len]; len];
     iterate_left_to_right(&trees, &mut visible_trees);
     iterate_right_to_left(&trees, &mut visible_trees);
     iterate_bottom_to_top(&trees, &mut visible_trees);
