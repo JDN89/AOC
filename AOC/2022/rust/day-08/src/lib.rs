@@ -6,6 +6,9 @@ fn iterate_left_to_right(
     for (y, row) in trees.iter().enumerate() {
         previous_tree = 0;
         'inner: for (x, curr_tree) in row.iter().enumerate() {
+            if x == 0 || x == row.len() - 1 {
+                visible_trees[y][x] = true
+            }
             if curr_tree > &previous_tree {
                 previous_tree = *curr_tree;
                 visible_trees[y][x] = true
@@ -25,6 +28,9 @@ fn iterate_right_to_left(
     for (y, row) in trees.iter().enumerate() {
         previous_tree = 0;
         'inner: for x in (0..row.len()).rev() {
+            if x == 0 || x == row.len() - 1 {
+                visible_trees[y][x] = true
+            }
             if row[x] > previous_tree {
                 previous_tree = row[x];
                 visible_trees[y][x] = true
@@ -45,6 +51,9 @@ fn iterate_top_to_bottom(
     for x in 0..trees[0].len() {
         previous_tree = 0;
         'inner: for (y, row) in trees.iter().enumerate() {
+            if x == 0 || x == row.len() - 1 {
+                visible_trees[y][x] = true
+            }
             if row[x] > previous_tree {
                 previous_tree = row[x];
                 visible_trees[y][x] = true
@@ -66,6 +75,9 @@ fn iterate_bottom_to_top(
         previous_tree = 0;
         'inner: for (y, row) in trees.iter().enumerate().rev() {
             dbg!(row[x]);
+            if x == 0 || x == row.len() - 1 {
+                visible_trees[y][x] = true
+            }
             if row[x] > previous_tree {
                 previous_tree = row[x];
                 visible_trees[y][x] = true
@@ -135,7 +147,7 @@ mod tests {
     fn test_iterate_left_to_right() {
         let input = vec![vec![1, 2, 3], vec![6, 5, 3], vec![7, 8, 9]];
 
-        let mut visible_trees = vec![vec![true; input[0].len()]; input.len()];
+        let mut visible_trees = vec![vec![false; input[0].len()]; input.len()];
         assert_eq!(
             iterate_left_to_right(&input, &mut visible_trees),
             VISIBLE_TREES_LEFT_TO_RIGHT
@@ -143,9 +155,9 @@ mod tests {
     }
 
     const VISIBLE_TREES_RIGHT_TO_LEFT: &[&[bool]] = &[
-        &[true, false, true],
-        &[false, true, true],
-        &[true, false, true],
+        &[false, false, false],
+        &[false, false, false],
+        &[false, true, false],
     ];
 
     #[test]
