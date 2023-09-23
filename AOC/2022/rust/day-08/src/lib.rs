@@ -12,6 +12,7 @@ fn set_boundries_as_visible(visible_trees: &mut Vec<Vec<bool>>) {
     }
 }
 
+// even more efficient is instead of vec of vecs -> use one vec (width * lenght). Every len booleans is a row
 fn iterate_left_to_right(trees: &Vec<Vec<u32>>, visible_trees: &mut Vec<Vec<bool>>) {
     let mut highest_tree;
     for (y, row) in trees.iter().enumerate() {
