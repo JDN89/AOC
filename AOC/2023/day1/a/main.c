@@ -46,8 +46,7 @@ void process_input(const char *input) {
   Num first = {.isInitialized = 0};
   Num second = {.isInitialized = 0};
 
-  char concated_chars[2];
-  char *output;
+  char concated_chars[3];
 
   while (*ptr != '\0') {
     if (*ptr == '\n') {
@@ -55,13 +54,20 @@ void process_input(const char *input) {
       concated_chars[0] = first.num;
       concated_chars[1] = second.num;
 
-      long temp = strtol(concated_chars, &output, BASE);
-      result += temp;
+      // NOTE: Importance of \0
+      // The null character plays an indispensable role in string management.
+      // Without it, functions like strlen(), strcpy(), and many others would
+      // have no means of determining where a string ends. It acts as a sentinel
+      // value, signaling to various string-handling functions that the end of
+      // the string has been reached.
+
+      concated_chars[2] = '\0';
+
+      result += atoi(concated_chars);
 
       first.isInitialized = 0;
       first.num = '\0';
       second.num = '\0';
-      temp = 0;
     }
     if (isdigit(*ptr)) {
       if (first.isInitialized == 0) {
