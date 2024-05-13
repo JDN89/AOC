@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define TEST_INPUT "test_input.txt"
 #define INPUT "input.txt"
@@ -85,12 +86,18 @@ void process_input(const char *input) {
 
 int main() {
 
+  clock_t start = clock();
+
   char *contents = read_from_file(INPUT);
   process_input(contents);
 
   free(contents);
 
   printf("result: %ld \n", result);
+
+  clock_t stop = clock();
+  double time_spent = (double)(stop - start) * 1000 / CLOCKS_PER_SEC;
+  printf("Time elapsed in ms: %f\n", time_spent);
 
   return 0;
 }
