@@ -1,41 +1,90 @@
+#include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define TEST_INPUT "test_input.txt"
+#define INPUT "input.txt"
+#define BASE 10
 
-int main() {
-  FILE *file = fopen(TEST_INPUT, "r");
+// TODO: add better error handling
 
+typedef struct {
+  char num;
+  bool isInitialized;
+} Num;
+
+long result = 0;
+
+char *read_from_file(char *filename) {
+  FILE *file = fopen(filename, "r");
   if (file == NULL) {
-    printf("Error opening file. \n");
-    return 1;
+    perror("Error opening file");
+    exit(EXIT_FAILURE);
   }
-
   fseek(file, 0, SEEK_END);
   int length = ftell(file);
   fseek(file, 0, SEEK_SET);
 
-  char *content = malloc(length + 1); // Allocate memory for the contents
-  if (content == NULL) {
-    printf("Memory allocation error.\n");
-    return 1;
+  char *contents =
+      malloc(sizeof(char) * length + 1); // Allocate memory for the contents
+  if (contents == NULL) {
+    perror("Memory allocation failed");
+    exit(EXIT_FAILURE);
   }
 
-  fread(content, 1, length, file);
-
-  content[length] = '\0';
-
+  fread(contents, 1, length, file);
+  contents[length] = '\0';
   fclose(file);
+  return contents;
+}
 
-  char *ptr = content;
+void process_input(const char *input) {
+
+  const char *ptr = input;
+
+  Num first = {.isInitialized = 0};
+  Num second = {.isInitialized = 0};
+
+  char concated_chars[2];
+  char *output;
+
   while (*ptr != '\0') {
-    printf("Character: %c, Address: %p\n", *ptr, (void *)ptr);
+    if (*ptr == '\n') {
+
+      concated_chars[0] = first.num;
+      concated_chars[1] = second.num;
+
+      long temp = strtol(concated_chars, &output, BASE);
+      result += temp;
+
+      first.isInitialized = 0;
+      first.num = '\0';
+      second.num = '\0';
+      temp = 0;
+    }
+    if (isdigit(*ptr)) {
+      if (first.isInitialized == 0) {
+        first.num = *ptr;
+        second.num = *ptr;
+
+        first.isInitialized = 1;
+      } else {
+        second.num = *ptr;
+      }
+    }
     ptr++;
   }
+}
 
-  // printf("%s\n", content);
+int main() {
 
-  free(content);
+  char *contents = read_from_file(INPUT);
+  process_input(contents);
+
+  free(contents);
+
+  printf("result: %ld \n", result);
 
   return 0;
 }
