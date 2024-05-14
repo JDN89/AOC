@@ -36,18 +36,24 @@ static char advance() {
 int scanSource() {
 
   if (isAtEnd()) {
-    return 0;
+    return 69;
   }
 
   scanner.start = scanner.current;
   char c = advance();
+  // TODO: call and use tRIE data structure to retrieve the number, alphaTrie()
+  // -> checkNumber(int start, int length,const char *rest, int return type )
   if (isAlpha(c)) {
-    printf("alpha: %c \n", *scanner.current);
+    printf("alpha: %c \n", c);
   }
+  // TODO: if is line break -> return 69 and to nothing check in main if we
+  // return 69 in case of 69 do nothing
   if (isDigit(c)) {
-    int digit = atoi(scanner.current);
+    int digit = c - '0';
     printf("digit: %d \n", digit);
   }
-
-  return 0;
+  if (c == '\n') {
+    printf("\n\n");
+  }
+  return 69;
 }

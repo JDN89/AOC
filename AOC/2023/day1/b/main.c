@@ -49,7 +49,10 @@ void process_input(const char *input) {
 
   for (;;) {
 
-    scanSource();
+    // TODO: if digit is 69 -> do nothing
+    // or 69 is ling break and 666 is end of file?
+    // not clean but getting tired and it's aoc...
+    int digit = scanSource();
     ptr++;
 
     // TODO: scanSource returns a digit (we convert char to digit) so we can't
