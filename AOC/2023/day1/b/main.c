@@ -8,6 +8,7 @@
 // ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE
 
 #define TEST_INPUT "test_input.txt"
+#define ONE_INPUT "one.txt"
 #define INPUT "input.txt"
 #define BASE 10
 
@@ -49,20 +50,15 @@ void process_input(const char *input) {
 
   for (;;) {
 
-    // TODO: if digit is 69 -> do nothing
-    // or 69 is ling break and 666 is end of file?
-    // not clean but getting tired and it's aoc...
     int digit = scanSource();
-    ptr++;
+    printf("digit: %d \n", digit);
 
-    // TODO: scanSource returns a digit (we convert char to digit) so we can't
-    // check if we reached by checking the return value of scanSource
-    // '\0'. so we have to move the pointer also here, which is ugly?
-    if (*ptr == '\0') {
+    if (digit == 999) {
       printf("End of file reached \n");
       break;
     }
   }
+
   return;
 }
 
@@ -70,7 +66,7 @@ int main() {
 
   clock_t start = clock();
 
-  char *contents = read_from_file(TEST_INPUT);
+  char *contents = read_from_file(ONE_INPUT);
   process_input(contents);
 
   free(contents);

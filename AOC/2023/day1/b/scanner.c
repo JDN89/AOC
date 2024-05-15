@@ -1,8 +1,11 @@
 #include "scanner.h"
+#include "string.h"
 
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
+
+#define NO_MATCH 69;
+#define LINE_BREAK 666;
+#define END_OF_FILE 999;
 
 typedef struct {
   const char *start;
@@ -27,33 +30,55 @@ static bool isAlpha(char c) {
 
 static bool isDigit(char c) { return (c >= '0' && c <= '9'); }
 
-// advance and retrieve consumed character
+// advance and return consumed character
 static char advance() {
   scanner.current++;
   return scanner.current[-1];
 }
 
+static void advanceBy(int by) { scanner.current += by; }
+
+// move pointer with value start and compare value until end with rest of string
+static int checkNumber(int start, int length, const char *rest, int number) {
+  int comp = memcmp(scanner.start + start, rest, length);
+
+  if (comp == 0) {
+    advanceBy(length);
+    return number;
+  } else {
+    advance();
+    return NO_MATCH;
+  }
+}
+
 int scanSource() {
 
+  scanner.start = scanner.current;
+
   if (isAtEnd()) {
-    return 69;
+    return END_OF_FILE;
   }
 
-  scanner.start = scanner.current;
   char c = advance();
-  // TODO: call and use tRIE data structure to retrieve the number, alphaTrie()
-  // -> checkNumber(int start, int length,const char *rest, int return type )
+
   if (isAlpha(c)) {
-    printf("alpha: %c \n", c);
+    switch (scanner.start[0]) {
+    case 'o': {
+      return checkNumber(1, 2, "ne", 1);
+    }
+    }
   }
-  // TODO: if is line break -> return 69 and to nothing check in main if we
-  // return 69 in case of 69 do nothing
+
   if (isDigit(c)) {
-    int digit = c - '0';
-    printf("digit: %d \n", digit);
+    return c - '0';
   }
+
   if (c == '\n') {
-    printf("\n\n");
+    return LINE_BREAK;
   }
-  return 69;
+  if (c == '\0') {
+    return END_OF_FILE;
+  }
+
+  return NO_MATCH;
 }
