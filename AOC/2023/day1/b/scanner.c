@@ -36,13 +36,13 @@ static char advance() {
 static void advanceBy(int by) { scanner.current += by; }
 
 // move pointer with value start and compare value until end with rest of string
-static int checkNumber(int start, int length, const char *rest, int number,
+static int checkNumber(int start, int length, const char *rest, int returnValue,
                        int jump) {
   int comp = memcmp(scanner.start + start, rest, length);
 
   if (comp == 0) {
     advanceBy(jump);
-    return number;
+    return returnValue;
   } else {
     advance();
     return NO_MATCH;
@@ -78,11 +78,32 @@ int scanSource() {
     case 't':
       switch (scanner.start[1]) {
       case 'w':
-        return checkNumber(2, 1, "o", 2, 3);
+        return checkNumber(2, 1, "o", 2, 2);
       case 'h':
         return checkNumber(2, 3, "ree", 3, 4);
       }
       break;
+    case 'f':
+      switch (scanner.start[1]) {
+      case 'o':
+        return checkNumber(2, 2, "ur", 4, 3);
+      case 'i':
+        return checkNumber(2, 2, "ve", 5, 3);
+      }
+      break;
+    case 's':
+      switch (scanner.start[1]) {
+      case 'i':
+        return checkNumber(2, 1, "x", 6, 2);
+      case 'e':
+        return checkNumber(2, 3, "ven", 7, 4);
+      }
+      break;
+    case 'e':
+      return checkNumber(1, 4, "ight", 8, 4);
+
+    case 'n':
+      return checkNumber(1, 3, "ine", 9, 3);
     }
   }
 
