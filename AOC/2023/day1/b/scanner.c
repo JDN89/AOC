@@ -4,12 +4,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-// TODO: place define and function used in main in a header file!
-
-#define NO_MATCH 69;
-#define LINE_BREAK 666;
-#define END_OF_FILE 999;
-
 typedef struct {
   const char *start;
   const char *current;
@@ -42,17 +36,15 @@ static char advance() {
 static void advanceBy(int by) { scanner.current += by; }
 
 // move pointer with value start and compare value until end with rest of string
-static int checkNumber(int start, int length, const char *rest, int number) {
-  printf("comp: start - %d, length - %d, rest - %s, number - %d \n \n", start,
-         length, rest, number);
+static int checkNumber(int start, int length, const char *rest, int number,
+                       int jump) {
   int comp = memcmp(scanner.start + start, rest, length);
 
   if (comp == 0) {
-    advanceBy(length);
+    advanceBy(jump);
     return number;
   } else {
     advance();
-    printf("no mathc in check: %c \n", *scanner.current);
     return NO_MATCH;
   }
 }
@@ -80,21 +72,15 @@ int scanSource() {
   }
 
   if (isAlpha(c)) {
-    printf("%c: charcter is this \n", c);
     switch (scanner.start[0]) {
     case 'o':
-      return checkNumber(1, 2, "ne", 1);
+      return checkNumber(1, 2, "ne", 1, 2);
     case 't':
-      // FIX: advance is not correct in this case -> level deeper so advance is
-      // plus one!!
-      // add an extra argument int advance in case of two  advance is two and
-      // three advance is four!
-
       switch (scanner.start[1]) {
       case 'w':
-        return checkNumber(2, 1, "o", 2);
+        return checkNumber(2, 1, "o", 2, 3);
       case 'h':
-        return checkNumber(2, 3, "ree", 3);
+        return checkNumber(2, 3, "ree", 3, 4);
       }
       break;
     }

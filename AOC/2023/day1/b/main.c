@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -53,7 +54,7 @@ void process_input(const char *input) {
     int digit = scanSource();
     printf("digit: %d \n", digit);
 
-    if (digit == 999) {
+    if (digit == END_OF_FILE) {
       printf("End of file reached \n");
       break;
     }
