@@ -1,5 +1,4 @@
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -14,11 +13,11 @@
 #define BASE 10
 
 typedef struct {
-  char num;
+  int num;
   bool isInitialized;
 } Num;
 
-long result = 0;
+int result = 0;
 
 char *read_from_file(char *filename) {
   FILE *file = fopen(filename, "rb");
@@ -46,17 +45,45 @@ char *read_from_file(char *filename) {
 
 void process_input(const char *input) {
 
+  Num first = {.isInitialized = 0};
+  Num second = {.isInitialized = 0};
+
+  // int num[2];
+
   const char *ptr = input;
   initScanner(ptr);
 
   for (;;) {
 
     int digit = scanSource();
-    printf("digit: %d \n", digit);
 
-    if (digit == END_OF_FILE) {
-      printf("End of file reached \n");
+    if (digit == LINE_BREAK) {
+
+      result += first.num * 10 + second.num;
+      printf("line break - result: %d \n", result);
+      first.isInitialized = 0;
+      first.num = 0;
+      second.num = 0;
+    } else if (digit == NO_MATCH) {
+      // printf("skip digit: %d \n", digit);
+    }
+
+    else if (digit == END_OF_FILE) {
+      printf("The result: %d \n", result);
       break;
+    }
+
+    // when mathc fill in first and second if first.num has'nt been initialized
+    // yet. Else just fill in second num.
+    else {
+      printf("digit before being assigned: %d \n\n", digit);
+      if (first.isInitialized == 0) {
+        first.num = digit;
+        second.num = digit;
+        first.isInitialized = 1;
+      } else {
+        second.num = digit;
+      }
     }
   }
 
@@ -67,7 +94,7 @@ int main() {
 
   clock_t start = clock();
 
-  char *contents = read_from_file(ONE_INPUT);
+  char *contents = read_from_file(TEST_INPUT);
   process_input(contents);
 
   free(contents);

@@ -44,7 +44,8 @@ static int checkNumber(int start, int length, const char *rest, int returnValue,
     advanceBy(jump);
     return returnValue;
   } else {
-    advance();
+    // don't advance because we allready advance one char and returned the
+    // consume char
     return NO_MATCH;
   }
 }
@@ -58,6 +59,7 @@ int scanSource() {
   }
 
   char c = advance();
+  printf("char c :: %c \n", c);
 
   if (c == '\n') {
     return LINE_BREAK;
@@ -68,6 +70,7 @@ int scanSource() {
   }
 
   if (isDigit(c)) {
+    printf("isDigit: %c\n", c);
     return c - '0';
   }
 
@@ -107,6 +110,5 @@ int scanSource() {
     }
   }
 
-  printf("no hit \n");
   return NO_MATCH;
 }
