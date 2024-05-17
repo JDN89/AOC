@@ -2,7 +2,6 @@
 #include "string.h"
 
 #include <stdbool.h>
-#include <stdio.h>
 
 typedef struct {
   const char *start;
@@ -42,7 +41,6 @@ static int checkNumber(int start, int length, const char *rest, int returnValue,
 
   if (comp == 0) {
     advanceBy(jump);
-    // printf("found number: %d \n", returnValue);
     return returnValue;
   } else {
     // don't advance because we allready advance one char and returned the
@@ -60,7 +58,6 @@ int scanSource() {
   }
 
   char c = advance();
-  // printf("char c :: %c \n", c);
 
   if (c == '\n') {
     return LINE_BREAK;
@@ -71,8 +68,6 @@ int scanSource() {
   }
 
   if (isDigit(c)) {
-    // printf("found digit: %c \n", c);
-    // printf("isDigit: %c\n", c);
     return c - '0';
   }
 

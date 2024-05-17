@@ -33,11 +33,14 @@ char *read_from_file(char *filename) {
   char *buffer = (char *)malloc(fileSize + 1);
   if (buffer == NULL) {
     fprintf(stderr, "Not enough memory to read \"%s\".\n", filename);
+    fclose(file);
     exit(74);
   }
   size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
   if (bytesRead < fileSize) {
     fprintf(stderr, "Could not read file \"%s\".\n", filename);
+    fclose(file);
+    free(buffer);
     exit(74);
   }
   buffer[bytesRead] = '\0';
@@ -61,10 +64,7 @@ void process_input(const char *input) {
 
     if (digit == LINE_BREAK) {
 
-      int temp = first.num * 10 + second.num;
-      printf("temp: %d \n", temp);
       result += first.num * 10 + second.num;
-      printf("line break - result: %d \n", result);
       first.isInitialized = 0;
       first.num = 0;
       second.num = 0;
