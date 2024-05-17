@@ -97,7 +97,7 @@ int main() {
 
   clock_t start = clock();
 
-  char *contents = read_from_file(ONE_INPUT);
+  char *contents = read_from_file(INPUT);
   process_input(contents);
 
   free(contents);

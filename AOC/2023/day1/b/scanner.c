@@ -76,39 +76,46 @@ int scanSource() {
     return c - '0';
   }
 
+  // we jump a char less because
+  // oneight 18
+  // threeight 38
+  // fiveight 58
+  // sevenine 79
+  // eighthree 83
+  // nineight 98 are valid values!!!!
   if (isAlpha(c)) {
     switch (scanner.start[0]) {
     case 'o':
-      return checkNumber(1, 2, "ne", 1, 2);
+      return checkNumber(1, 2, "ne", 1, 1);
     case 't':
       switch (scanner.start[1]) {
       case 'w':
-        return checkNumber(2, 1, "o", 2, 2);
+        return checkNumber(2, 1, "o", 2, 1);
       case 'h':
-        return checkNumber(2, 3, "ree", 3, 4);
+        return checkNumber(2, 3, "ree", 3, 3);
       }
       break;
     case 'f':
       switch (scanner.start[1]) {
       case 'o':
-        return checkNumber(2, 2, "ur", 4, 3);
+        return checkNumber(2, 2, "ur", 4, 2);
       case 'i':
-        return checkNumber(2, 2, "ve", 5, 3);
+        return checkNumber(2, 2, "ve", 5, 2);
       }
       break;
     case 's':
       switch (scanner.start[1]) {
       case 'i':
-        return checkNumber(2, 1, "x", 6, 2);
+        return checkNumber(2, 1, "x", 6, 1);
       case 'e':
-        return checkNumber(2, 3, "ven", 7, 4);
+        return checkNumber(2, 3, "ven", 7, 3);
       }
       break;
     case 'e':
-      return checkNumber(1, 4, "ight", 8, 4);
+      return checkNumber(1, 4, "ight", 8, 3);
 
     case 'n':
-      return checkNumber(1, 3, "ine", 9, 3);
+      return checkNumber(1, 3, "ine", 9, 2);
     }
   }
 
