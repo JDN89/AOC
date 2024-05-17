@@ -10,6 +10,8 @@
 #define TEST_INPUT "test_input.txt"
 #define ONE_INPUT "one.txt"
 #define INPUT "input.txt"
+
+#define FINAL_TEST "num_as_char_test.txt"
 #define BASE 10
 
 typedef struct {
@@ -59,6 +61,8 @@ void process_input(const char *input) {
 
     if (digit == LINE_BREAK) {
 
+      int temp = first.num * 10 + second.num;
+      printf("temp: %d \n", temp);
       result += first.num * 10 + second.num;
       printf("line break - result: %d \n", result);
       first.isInitialized = 0;
@@ -76,7 +80,6 @@ void process_input(const char *input) {
     // when mathc fill in first and second if first.num has'nt been initialized
     // yet. Else just fill in second num.
     else {
-      printf("digit before being assigned: %d \n\n", digit);
       if (first.isInitialized == 0) {
         first.num = digit;
         second.num = digit;
@@ -94,7 +97,7 @@ int main() {
 
   clock_t start = clock();
 
-  char *contents = read_from_file(TEST_INPUT);
+  char *contents = read_from_file(ONE_INPUT);
   process_input(contents);
 
   free(contents);
