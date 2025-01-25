@@ -1,4 +1,7 @@
+mod day01;
 use std::{env, fs};
+
+use day01::parse_input_day01;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -14,5 +17,5 @@ fn main() {
         _ => println!("not implemented"),
     }
 
-    println!("Hello, world!");
+    parse_input_day01(&input);
 }
