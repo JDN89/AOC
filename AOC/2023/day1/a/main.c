@@ -19,6 +19,7 @@ long result = 0;
 
 char *read_from_file(char *filename) {
   FILE *file = fopen(filename, "r");
+
   if (file == NULL) {
     perror("Error opening file");
     exit(EXIT_FAILURE);
