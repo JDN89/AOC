@@ -1,0 +1,39 @@
+# Ignore target directory with compiled output
+/target/
+
+# Ignore Cargo.lock if it's a library project (optional, for binaries you may want to keep it)
+/Cargo.lock
+
+# Ignore editor swap files and backups
+*.swp
+*.swo
+*.bak
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore Rust language server (rust-analyzer) files
+/.rust-analyzer/
+
+# Ignore IDE config folders (adjust if you use other editors)
+/.vscode/
+/.idea/
+
+# Ignore compiled dynamic libraries if any
+*.dll
+*.so
+*.dylib
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore coverage reports if you generate them
+/coverage/
+
+# Ignore build scripts generated files (if any)
+/build/
+
+# Ignore test outputs (optional)
+/tests/output/
