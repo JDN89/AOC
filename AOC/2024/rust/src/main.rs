@@ -1,21 +1,12 @@
-mod day01;
-use std::{env, fs};
-
-use day01::parse_input_day01;
+mod days;
+mod util;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    //
-    // arg will be day1 or day2 or test
-    let day_or_test = args.get(1).expect("failed to get first arg");
-
-    let input =
-        fs::read_to_string(format!("input/{}.txt", day_or_test)).expect("failed to read input");
-
-    match day_or_test.as_str() {
-        "test" => println!("input: {}", &input),
-        _ => println!("not implemented"),
+    let day = std::env::args().nth(1).expect("Povide day number");
+    match day.as_str() {
+        "1" => days::day01::run(),
+        // "2" => days::day02::run(),
+        _ => eprintln!("Unknown day: {}", day),
     }
-
-    parse_input_day01(&input);
+    println!("Hello, world!");
 }
