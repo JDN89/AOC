@@ -8,5 +8,4 @@ fn main() {
         "2" => days::day02::run(),
         _ => eprintln!("Unknown day: {}", day),
     }
-    println!("Hello, world!");
 }
