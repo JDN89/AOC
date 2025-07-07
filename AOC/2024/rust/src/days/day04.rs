@@ -14,7 +14,7 @@ fn check_horizontal_right(grid: &Vec<Vec<char>>, x: usize, y: usize) {
         return;
     }
     if grid[x][y + 1] == 'M' && grid[x][y + 2] == 'A' && grid[x][y + 3] == 'S' {
-        println!("x: {}, y: {}", x, y)
+        println!(" Horizontal left to right -- x: {}, y: {}", x, y)
     }
 }
 fn check_horizontal_left(grid: &Vec<Vec<char>>, x: usize, y: usize) {
@@ -23,7 +23,27 @@ fn check_horizontal_left(grid: &Vec<Vec<char>>, x: usize, y: usize) {
         return;
     }
     if grid[x][y - 1] == 'M' && grid[x][y - 2] == 'A' && grid[x][y - 3] == 'S' {
-        println!("x: {}, y: {}", x, y)
+        println!(" Horizontal right to left -- x: {}, y: {}", x, y)
+    }
+}
+
+fn check_vertical_top_to_bottom(grid: &Vec<Vec<char>>, x: usize, y: usize) {
+    //just temp check if y+3 is bigger then len -> fix later
+    if x + 3 > grid[0].len() {
+        return;
+    }
+    if grid[x + 1][y] == 'M' && grid[x + 2][y] == 'A' && grid[x + 3][y] == 'S' {
+        println!("Vertical top to bottom -- x: {}, y: {}", x, y)
+    }
+}
+
+fn check_vertical_bottom_to_top(grid: &Vec<Vec<char>>, x: usize, y: usize) {
+    //just temp check if y+3 is bigger then len -> fix later
+    if x < 3 {
+        return;
+    }
+    if grid[x - 1][y] == 'M' && grid[x - 2][y] == 'A' && grid[x - 3][y] == 'S' {
+        println!("Vertical bottom to top -- x: {}, y: {}", x, y)
     }
 }
 
@@ -39,6 +59,8 @@ pub fn part1(input: &str) -> i32 {
             if grid[x][y] == 'X' {
                 check_horizontal_right(&grid, x, y);
                 check_horizontal_left(&grid, x, y);
+                check_vertical_top_to_bottom(&grid, x, y);
+                check_vertical_bottom_to_top(&grid, x, y);
             }
         }
         // println!("row{:?}", row);
