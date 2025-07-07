@@ -10,13 +10,14 @@ pub fn run() {
 
 fn check_horizontal_right(grid: &Vec<Vec<char>>, x: usize, y: usize) {
     //just temp check if y+3 is bigger then len -> fix later
-    if y + 3 > grid[0].len() {
+    if y + 3 > grid[0].len() - 1 {
         return;
     }
     if grid[x][y + 1] == 'M' && grid[x][y + 2] == 'A' && grid[x][y + 3] == 'S' {
         println!(" Horizontal left to right -- x: {}, y: {}", x, y)
     }
 }
+
 fn check_horizontal_left(grid: &Vec<Vec<char>>, x: usize, y: usize) {
     //just temp check if y+3 is bigger then len -> fix later
     if y < 3 {
@@ -29,7 +30,7 @@ fn check_horizontal_left(grid: &Vec<Vec<char>>, x: usize, y: usize) {
 
 fn check_vertical_top_to_bottom(grid: &Vec<Vec<char>>, x: usize, y: usize) {
     //just temp check if y+3 is bigger then len -> fix later
-    if x + 3 > grid[0].len() {
+    if x + 3 > grid.len() - 1 {
         return;
     }
     if grid[x + 1][y] == 'M' && grid[x + 2][y] == 'A' && grid[x + 3][y] == 'S' {
@@ -46,21 +47,61 @@ fn check_vertical_bottom_to_top(grid: &Vec<Vec<char>>, x: usize, y: usize) {
         println!("Vertical bottom to top -- x: {}, y: {}", x, y)
     }
 }
+fn check_diagnoal_top_left_right(grid: &Vec<Vec<char>>, x: usize, y: usize) {
+    if x + 3 > grid.len() - 1 || y + 3 > grid[0].len() - 1 {
+        return;
+    }
+    if grid[x + 1][y + 1] == 'M' && grid[x + 2][y + 2] == 'A' && grid[x + 3][y + 3] == 'S' {
+        println!("Diagonal top to bottom left to right -- x: {}, y: {}", x, y)
+    }
+}
+fn check_diagnoal_top_right_left(grid: &Vec<Vec<char>>, x: usize, y: usize) {
+    if x + 3 > grid.len() - 1 || y < 3 {
+        return;
+    }
+    if grid[x + 1][y - 1] == 'M' && grid[x + 2][y - 2] == 'A' && grid[x + 3][y - 3] == 'S' {
+        println!("Diagonal top to bottom right to left -- x: {}, y: {}", x, y)
+    }
+}
+
+fn check_diagnoal_bottom_right_left(grid: &Vec<Vec<char>>, x: usize, y: usize) {
+    if x < 3 || y < 3 {
+        return;
+    }
+    if grid[x - 1][y - 1] == 'M' && grid[x - 2][y - 2] == 'A' && grid[x - 3][y - 3] == 'S' {
+        println!("Diagonal bottom to top right to left -- x: {}, y: {}", x, y)
+    }
+}
+
+fn check_diagnoal_bottom_left_right(grid: &Vec<Vec<char>>, x: usize, y: usize) {
+    if x < 3 || y + 3 > grid.len() - 1 {
+        return;
+    }
+    if grid[x - 1][y + 1] == 'M' && grid[x - 2][y + 2] == 'A' && grid[x - 3][y + 3] == 'S' {
+        println!("Diagonal bottom to top left to right -- x: {}, y: {}", x, y)
+    }
+}
 
 pub fn part1(input: &str) -> i32 {
     // place the chars of input in vec of vec
     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
 
-    let row = grid.len();
-    let col = grid[0].len();
+    //len returns number of el in array. zero based index, so len -1
+    let row = grid.len() - 1;
+    let col = grid[0].len() - 1;
 
-    for x in 0..row {
-        for y in 0..col {
+    //NOTE: itterate over inclusive range ..=
+    for x in 0..=row {
+        for y in 0..=col {
             if grid[x][y] == 'X' {
                 check_horizontal_right(&grid, x, y);
                 check_horizontal_left(&grid, x, y);
                 check_vertical_top_to_bottom(&grid, x, y);
                 check_vertical_bottom_to_top(&grid, x, y);
+                check_diagnoal_top_right_left(&grid, x, y);
+                check_diagnoal_top_left_right(&grid, x, y);
+                check_diagnoal_bottom_left_right(&grid, x, y);
+                check_diagnoal_bottom_right_left(&grid, x, y);
             }
         }
         // println!("row{:?}", row);
