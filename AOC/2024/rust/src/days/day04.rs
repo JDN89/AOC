@@ -97,7 +97,18 @@ fn check_diagnoal_bottom_left_right(grid: &Vec<Vec<char>>, x: usize, y: usize) -
     }
     return 0;
 }
-
+// Elegantere oplossing met behulp van chtgp. je werkt gewoon met directies
+// en je doen x en y  * 1,2,3,4 om de coordinaten te bekomen
+// let directions = [
+//        (0, 1),   // right
+//        (0, -1),  // left
+//        (1, 0),   // down
+//        (-1, 0),  // up
+//        (1, 1),   // down-right
+//        (1, -1),  // down-left
+//        (-1, 1),  // up-right
+//        (-1, -1), // up-left
+//    ];
 pub fn part1(input: &str) -> i32 {
     let mut counter: i32 = 0;
     // place the chars of input in vec of vec
