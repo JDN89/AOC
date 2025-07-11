@@ -156,21 +156,19 @@ pub fn part2(input: &str) -> i32 {
     for x in 0..=row {
         for y in 0..=col {
             if grid[x][y] == 'M' {
-                println!("M Found !");
                 let words = ['A', 'S'];
                 // TODO place in seperate funciton that returns a number
                 // TODO loop over directions
                 for i in 0..2 {
                     // BUG zou hist moten geven in 1,7
-                    let dx = x * (directions[0].0 + (i + 1)) as usize;
-                    let dy = y * (directions[0].1 + (i + 1)) as usize;
-                    println!("M found : dx {},dy{} ", dx, dy);
+                    let dx = x + (directions[0].0 * (i + 1)) as usize;
+                    let dy = y + (directions[0].1 * (i + 1)) as usize;
                     // 1,1 ->
-                    if dx > grid.len() || dy > grid[0].len() {
-                        return 0;
+                    if dx > grid.len() - 1 || dy > grid[0].len() - 1 {
+                        break;
                     }
                     if grid[dx][dy] == words[i as usize] {
-                        println!("dx : {}, dy {}", dx, dy);
+                        println!("HIT for x: {}, y :{}, dx : {}, dy {}", x, y, dx, dy);
                     }
                 }
             }
