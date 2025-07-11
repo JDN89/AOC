@@ -138,6 +138,44 @@ pub fn part1(input: &str) -> i32 {
     return counter;
 }
 
-pub fn part2(_input: &str) -> i32 {
+pub fn part2(input: &str) -> i32 {
+    let directions: [(isize, isize); 4] = [
+        (1, 1),   //down right
+        (1, -1),  //down left
+        (-1, 1),  // up-right
+        (-1, -1), // up-left
+    ];
+
+    let mut counter: i32 = 0;
+    // place the chars of input in vec of vec
+    let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+    //len returns number of el in array. zero based index, so len -1
+    let row = grid.len() - 1;
+    let col = grid[0].len() - 1;
+
+    for x in 0..=row {
+        for y in 0..=col {
+            if grid[x][y] == 'M' {
+                println!("M Found !");
+                let words = ['A', 'S'];
+                // TODO place in seperate funciton that returns a number
+                // TODO loop over directions
+                for i in 0..2 {
+                    // BUG zou hist moten geven in 1,7
+                    let dx = x * (directions[0].0 + (i + 1)) as usize;
+                    let dy = y * (directions[0].1 + (i + 1)) as usize;
+                    println!("M found : dx {},dy{} ", dx, dy);
+                    // 1,1 ->
+                    if dx > grid.len() || dy > grid[0].len() {
+                        return 0;
+                    }
+                    if grid[dx][dy] == words[i as usize] {
+                        println!("dx : {}, dy {}", dx, dy);
+                    }
+                }
+            }
+        }
+    }
+
     1
 }
