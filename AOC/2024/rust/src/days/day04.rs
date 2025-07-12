@@ -138,6 +138,13 @@ pub fn part1(input: &str) -> i32 {
     return counter;
 }
 
+// BUG start over!!
+// i have to start checking from A!
+// Now i Take M as the starting point wich is wrong
+// check only top-right and top-left and see when you encounter A if the other letters are M and S
+// then check the other diagonoal.
+// if both hit return 1 -> increase counter
+// FUN with grids
 pub fn part2(input: &str) -> i32 {
     let directions: [(isize, isize); 4] = [
         (1, 1),   //down right
@@ -145,6 +152,12 @@ pub fn part2(input: &str) -> i32 {
         (-1, 1),  // up-right
         (-1, -1), // up-left
     ];
+    // let directions: [(isize, isize); 1] = [
+    //     // (1, 1),   //down right
+    //     // (1, -1),  //down left
+    //     (-1, 1), // up-right
+    //              // (-1, -1), // up-left
+    // ];
 
     let mut counter: i32 = 0;
     // place the chars of input in vec of vec
@@ -160,29 +173,37 @@ pub fn part2(input: &str) -> i32 {
                 // TODO place in seperate funciton that returns a number
                 // TODO loop over directions
                 let mut words_found = 0;
-                for i in 0..2 {
-                    // convert to negative
-                    let x_isize = x as isize;
-                    let y_isize = y as isize;
-                    // BUG zou hist moten geven in 1,7
-                    let dx = x_isize + (directions[0].0 * (i + 1)) as isize;
-                    let dy = y_isize + (directions[0].1 * (i + 1)) as isize;
-                    // 1,1 ->
-                    // Boundary check
-                    if dx < 0 || dy < 0 || dx > row as isize || dy > col as isize {
-                        break; // Out of bounds, stop checking this direction
-                    }
+                let mut directions_found = 0;
 
-                    let dx = dx as usize;
-                    let dy = dy as usize;
+                for direction in directions {
+                    for i in 0..2 {
+                        // NOTE convert to negative
+                        let x_isize = x as isize;
+                        let y_isize = y as isize;
 
-                    if grid[dx][dy] == words[i as usize] {
-                        words_found += 1;
-                        if words_found == 2 {
-                            println!("HIT for x: {}, y :{}, dx : {}, dy {}", x, y, dx, dy);
+                        let dx = x_isize + (direction.0 * (i + 1)) as isize;
+                        let dy = y_isize + (direction.1 * (i + 1)) as isize;
+
+                        // Boundary check
+                        if dx < 0 || dy < 0 || dx > row as isize || dy > col as isize {
+                            break; // Out of bounds, stop checking this direction
                         }
-                    } else {
-                        break;
+
+                        let dx = dx as usize;
+                        let dy = dy as usize;
+
+                        if grid[dx][dy] == words[i as usize] {
+                            words_found += 1;
+                            if words_found == 2 {
+                                directions_found += 1;
+                                if directions_found == 2 {
+                                    println!("borth directions found for for x: {}, y :{}  ", x, y);
+                                }
+                                println!("HIT for x: {}, y :{}, dx : {}, dy {}", x, y, dx, dy);
+                            }
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
