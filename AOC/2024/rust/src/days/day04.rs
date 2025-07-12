@@ -164,11 +164,13 @@ pub fn part2(input: &str) -> i32 {
                     let dx = x + (directions[0].0 * (i + 1)) as usize;
                     let dy = y + (directions[0].1 * (i + 1)) as usize;
                     // 1,1 ->
-                    if dx > grid.len() - 1 || dy > grid[0].len() - 1 {
+                    if x + 2 > grid.len() - 1 || y + 2 > grid[0].len() - 1 {
                         break;
                     }
                     if grid[dx][dy] == words[i as usize] {
                         println!("HIT for x: {}, y :{}, dx : {}, dy {}", x, y, dx, dy);
+                    } else {
+                        break;
                     }
                 }
             }
