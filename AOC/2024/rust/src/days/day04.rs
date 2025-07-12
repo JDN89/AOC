@@ -163,16 +163,16 @@ pub fn part2(input: &str) -> i32 {
     let row = grid.len() - 1;
     let col = grid[0].len() - 1;
 
-    // BUG I'm not find A on (2,6) and 2,7 ??
+    let mut xmas_counter = 0;
+
     for x in 0..=row {
         for y in 0..=col {
             // Look for A and then check for 'S' and 'M' in the diagonal directions
             if grid[x][y] == 'A' {
                 // if A is at the edge, break
                 if x == 0 || x == grid.len() - 1 || y == 0 || y == grid[0].len() - 1 {
-                    break;
+                    continue;
                 }
-                println!("A found! -- x {} y {} ", x + 1, y + 1);
                 //cast usize to isize, needed for negative numbers
                 let top_left_x = x as isize + directions[0].0;
                 let top_left_y = y as isize + directions[0].1;
@@ -194,10 +194,11 @@ pub fn part2(input: &str) -> i32 {
                             && grid[down_left_x as usize][down_left_y as usize] == 'M'))
                 {
                     // println!("MAS found! -- x {} y {} ", x + 1, y + 1);
+                    xmas_counter += 1;
                 }
             }
         }
     }
 
-    2
+    xmas_counter
 }
