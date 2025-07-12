@@ -159,16 +159,28 @@ pub fn part2(input: &str) -> i32 {
                 let words = ['A', 'S'];
                 // TODO place in seperate funciton that returns a number
                 // TODO loop over directions
+                let mut words_found = 0;
                 for i in 0..2 {
+                    // convert to negative
+                    let x_isize = x as isize;
+                    let y_isize = y as isize;
                     // BUG zou hist moten geven in 1,7
-                    let dx = x + (directions[0].0 * (i + 1)) as usize;
-                    let dy = y + (directions[0].1 * (i + 1)) as usize;
+                    let dx = x_isize + (directions[0].0 * (i + 1)) as isize;
+                    let dy = y_isize + (directions[0].1 * (i + 1)) as isize;
                     // 1,1 ->
-                    if x + 2 > grid.len() - 1 || y + 2 > grid[0].len() - 1 {
-                        break;
+                    // Boundary check
+                    if dx < 0 || dy < 0 || dx > row as isize || dy > col as isize {
+                        break; // Out of bounds, stop checking this direction
                     }
+
+                    let dx = dx as usize;
+                    let dy = dy as usize;
+
                     if grid[dx][dy] == words[i as usize] {
-                        println!("HIT for x: {}, y :{}, dx : {}, dy {}", x, y, dx, dy);
+                        words_found += 1;
+                        if words_found == 2 {
+                            println!("HIT for x: {}, y :{}, dx : {}, dy {}", x, y, dx, dy);
+                        }
                     } else {
                         break;
                     }
