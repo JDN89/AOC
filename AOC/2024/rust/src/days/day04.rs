@@ -1,3 +1,5 @@
+use std::isize;
+
 use crate::util;
 
 pub fn run() {
@@ -145,70 +147,56 @@ pub fn part1(input: &str) -> i32 {
 // then check the other diagonoal.
 // if both hit return 1 -> increase counter
 // FUN with grids
+
 pub fn part2(input: &str) -> i32 {
     let directions: [(isize, isize); 4] = [
-        (1, 1),   //down right
-        (1, -1),  //down left
-        (-1, 1),  // up-right
-        (-1, -1), // up-left
+        //Down right diagonal
+        (-1, -1), //top-left
+        (1, 1),   //down-right
+        //Down left diagonal
+        (-1, 1), //top-rigth
+        (1, -1), //down-left
     ];
-    // let directions: [(isize, isize); 1] = [
-    //     // (1, 1),   //down right
-    //     // (1, -1),  //down left
-    //     (-1, 1), // up-right
-    //              // (-1, -1), // up-left
-    // ];
 
-    let mut counter: i32 = 0;
-    // place the chars of input in vec of vec
     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
-    //len returns number of el in array. zero based index, so len -1
+
     let row = grid.len() - 1;
     let col = grid[0].len() - 1;
 
+    // BUG A on (2,6) and 2,7 not found!
     for x in 0..=row {
         for y in 0..=col {
-            if grid[x][y] == 'M' {
-                let words = ['A', 'S'];
-                // TODO place in seperate funciton that returns a number
-                // TODO loop over directions
-                let mut words_found = 0;
-                let mut directions_found = 0;
+            // Look for A and then check for 'S' and 'M' in the diagonal directions
+            if grid[x][y] == 'A' {
+                // if A is at the edge, break
+                if x == 0 || x == grid.len() - 1 || y == 0 || y == grid[0].len() - 1 {
+                    break;
+                }
+                //cast usize to isize, needed for negative numbers
+                let top_left_x = x as isize + directions[0].0;
+                let top_left_y = y as isize + directions[0].1;
+                let down_right_x = x as isize + directions[1].0;
+                let down_right_y = y as isize + directions[1].1;
+                let top_right_x = x as isize + directions[2].0;
+                let top_right_y = y as isize + directions[2].1;
+                let down_left_x = x as isize + directions[3].0;
+                let down_left_y = y as isize + directions[3].1;
 
-                for direction in directions {
-                    for i in 0..2 {
-                        // NOTE convert to negative
-                        let x_isize = x as isize;
-                        let y_isize = y as isize;
-
-                        let dx = x_isize + (direction.0 * (i + 1)) as isize;
-                        let dy = y_isize + (direction.1 * (i + 1)) as isize;
-
-                        // Boundary check
-                        if dx < 0 || dy < 0 || dx > row as isize || dy > col as isize {
-                            break; // Out of bounds, stop checking this direction
-                        }
-
-                        let dx = dx as usize;
-                        let dy = dy as usize;
-
-                        if grid[dx][dy] == words[i as usize] {
-                            words_found += 1;
-                            if words_found == 2 {
-                                directions_found += 1;
-                                if directions_found == 2 {
-                                    println!("borth directions found for for x: {}, y :{}  ", x, y);
-                                }
-                                println!("HIT for x: {}, y :{}, dx : {}, dy {}", x, y, dx, dy);
-                            }
-                        } else {
-                            break;
-                        }
-                    }
+                if ((grid[top_left_x as usize][top_left_y as usize] == 'M'
+                    && grid[down_right_x as usize][down_right_y as usize] == 'S')
+                    || (grid[top_left_x as usize][top_left_y as usize] == 'S'
+                        && grid[down_right_x as usize][down_right_y as usize] == 'M'))
+                    //check if we find M and S on both diagonals
+                    && ((grid[top_right_x as usize][top_right_y as usize] == 'M'
+                        && grid[down_left_x as usize][down_left_y as usize] == 'S')
+                        || (grid[top_right_x as usize][top_right_y as usize] == 'S'
+                            && grid[down_left_x as usize][down_left_y as usize] == 'M'))
+                {
+                    println!("MAS found! -- x {} y {} ", x + 1, y + 1);
                 }
             }
         }
     }
 
-    1
+    2
 }
