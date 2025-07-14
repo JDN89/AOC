@@ -1,4 +1,4 @@
-use aoc_2024::days::{day01, day02, day03, day04}; // import the day01 module
+use aoc_2024::days::{day01, day02, day03, day04, day05}; // import the day01 module
 use aoc_2024::util::read_input;
 
 #[test]
@@ -29,4 +29,10 @@ fn day4() {
     let input = read_input("inputs/test_input_day04.txt");
     // assert_eq!(day04::part1(&input), 18);
     assert_eq!(day04::part2(&input), 9);
+}
+#[test]
+fn day5() {
+    let input = read_input("inputs/test_input_day05.txt");
+    assert_eq!(day05::part1(&input), 143);
+    // assert_eq!(day04::part2(&input), 9);
 }
