@@ -33,6 +33,6 @@ fn day4() {
 #[test]
 fn day5() {
     let input = read_input("inputs/test_input_day05.txt");
-    assert_eq!(day05::part1(&input), 143);
-    // assert_eq!(day04::part2(&input), 9);
+    // assert_eq!(day05::part1(&input), 143);
+    assert_eq!(day05::part2(&input), 123);
 }
