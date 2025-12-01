@@ -1,7 +1,7 @@
 use crate::util;
 
 pub fn run() {
-    let input = util::read_input("inputs/day01.txt");
+    let input = util::read_input("inputs/input_day01.txt");
 
     let part1_solution = part1(&input);
     let part2_solution = part2(&input);
