@@ -204,52 +204,52 @@ pub fn part2(input: &str) -> i32 {
 }
 
 //SOLUTION spit out by the AI -> I asked for a cleaner solution
-pub fn _part2(input: &str) -> i32 {
-    let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
-    let rows = grid.len();
-    let cols = grid[0].len();
-    let mut count = 0;
+// pub fn _part2(input: &str) -> i32 {
+//     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+//     let rows = grid.len();
+//     let cols = grid[0].len();
+//     let mut count = 0;
+//
+//     // Helper to safely get a character at (x, y)
+//     let get = |x: isize, y: isize| {
+//         if x >= 0 && y >= 0 && (x as usize) < rows && (y as usize) < cols {
+//             Some(grid[x as usize][y as usize])
+//         } else {
+//             None
+//         }
+//     };
+//
+//     for x in 1..(rows - 1) {
+//         for y in 1..(cols - 1) {
+//             if grid[x][y] != 'A' {
+//                 continue;
+//             }
+//
+//             let x = x as isize;
+//             let y = y as isize;
+//
+//             // Diagonal characters
+//             let top_left = get(x - 1, y - 1);
+//             let bottom_right = get(x + 1, y + 1);
+//             let top_right = get(x - 1, y + 1);
+//             let bottom_left = get(x + 1, y - 1);
+//
+//             // Check both diagonals contain 'M' and 'S' (any order)
+//             let diag1 = [top_left, bottom_right];
+//             let diag2 = [top_right, bottom_left];
+//
+//             if is_mas_diag(&diag1) && is_mas_diag(&diag2) {
+//                 count += 1;
+//             }
+//         }
+//     }
+//
+//     count
+// }
 
-    // Helper to safely get a character at (x, y)
-    let get = |x: isize, y: isize| {
-        if x >= 0 && y >= 0 && (x as usize) < rows && (y as usize) < cols {
-            Some(grid[x as usize][y as usize])
-        } else {
-            None
-        }
-    };
-
-    for x in 1..(rows - 1) {
-        for y in 1..(cols - 1) {
-            if grid[x][y] != 'A' {
-                continue;
-            }
-
-            let x = x as isize;
-            let y = y as isize;
-
-            // Diagonal characters
-            let top_left = get(x - 1, y - 1);
-            let bottom_right = get(x + 1, y + 1);
-            let top_right = get(x - 1, y + 1);
-            let bottom_left = get(x + 1, y - 1);
-
-            // Check both diagonals contain 'M' and 'S' (any order)
-            let diag1 = [top_left, bottom_right];
-            let diag2 = [top_right, bottom_left];
-
-            if is_mas_diag(&diag1) && is_mas_diag(&diag2) {
-                count += 1;
-            }
-        }
-    }
-
-    count
-}
-
-fn is_mas_diag(diag: &[Option<char>; 2]) -> bool {
-    match (diag[0], diag[1]) {
-        (Some('M'), Some('S')) | (Some('S'), Some('M')) => true,
-        _ => false,
-    }
-}
+// fn is_mas_diag(diag: &[Option<char>; 2]) -> bool {
+//     match (diag[0], diag[1]) {
+//         (Some('M'), Some('S')) | (Some('S'), Some('M')) => true,
+//         _ => false,
+//     }
+// }
