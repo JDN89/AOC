@@ -1,10 +1,7 @@
-use std::{fs, path::PathBuf};
-// I had issues with debugging in zed. so contsturct full path via cargo_manifest_dir
-// env!("CARGO_MANIFEST_DIR") expands to the path of your project root at compile time.
+use std::fs::{self};
+
+/// Read the entire file into a single String
 pub fn read_input(path: &str) -> String {
-    let full_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(path);
-    fs::read_to_string(full_path).expect("Failed to read input")
+    let input = fs::read_to_string(path).expect("Failed to read file");
+    input
 }
-// parse_lines<T>()
-// split_groups()
-// grid utilities

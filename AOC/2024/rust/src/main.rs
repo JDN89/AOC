@@ -1,14 +1,28 @@
+use std::env;
+
 mod days;
 mod util;
 
 fn main() {
-    let day = std::env::args().nth(1).expect("Provide day number");
-    match day.as_str() {
-        "01" => days::day01::run(),
-        "02" => days::day02::run(),
-        "03" => days::day03::run(),
-        "04" => days::day04::run(),
-        "05" => days::day05::run(),
-        _ => eprintln!("Unknown day: {}", day),
+    let day = env::args().nth(1).expect("Provide day number");
+    let part = env::args().nth(2).expect("Provide part number");
+    let input_file = format!("inputs/input_day{}.txt", day);
+
+    let input = util::read_input(&input_file);
+
+    // Map day and part to the corresponding function
+    let result = match day.as_str() {
+        "01" => match part.as_str() {
+            "part1" => Some(days::day01::part1(&input)),
+            "part2" => Some(days::day01::part2(&input)),
+            _ => None,
+        },
+        // Add more days here
+        _ => None,
+    };
+
+    match result {
+        Some(value) => println!("Result: {}", value),
+        None => eprintln!("Unknown day ({}) or part ({})", day, part),
     }
 }

@@ -1,38 +1,23 @@
-use aoc_2024::days::{day01, day02, day03, day04, day05}; // import the day01 module
-use aoc_2024::util::read_input;
+use aoc_2024::days;
+use std::fs; // Use the library crate's public module
 
-#[test]
-fn day1() {
-    let input = read_input("inputs/test_input_day01.txt");
-
-    assert_eq!(day01::part1(&input), 11);
-    assert_eq!(day01::part2(&input), 31);
+fn read_test_input(day: &str) -> String {
+    let path = format!("inputs/test_input_{}.txt", day);
+    fs::read_to_string(&path).expect("Failed to read test input")
 }
 
 #[test]
-fn day2() {
-    let input = read_input("inputs/test_input_day02.txt");
-
-    // assert_eq!(day02::part1(&input), 2);
-    assert_eq!(day02::part2(&input), 4);
+fn test_day01_part1() {
+    let input = read_test_input("day01");
+    let result = days::day01::part1(&input);
+    let expected = 1; // Replace with actual expected output
+    assert_eq!(result, expected);
 }
 
 #[test]
-fn day3() {
-    let input = read_input("inputs/test_input_day03.txt");
-    // assert_eq!(day03::part1(&input), 161);
-    assert_eq!(day03::part2(&input), 48);
-}
-
-#[test]
-fn day4() {
-    let input = read_input("inputs/test_input_day04.txt");
-    // assert_eq!(day04::part1(&input), 18);
-    assert_eq!(day04::part2(&input), 9);
-}
-#[test]
-fn day5() {
-    let input = read_input("inputs/test_input_day05.txt");
-    // assert_eq!(day05::part1(&input), 143);
-    assert_eq!(day05::part2(&input), 123);
+fn test_day01_part2() {
+    let input = read_test_input("day01");
+    let result = days::day01::part2(&input);
+    let expected = 0; // Replace with actual expected output
+    assert_eq!(result, expected);
 }

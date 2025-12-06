@@ -1,3 +1,17 @@
 # Rust lang specifics.
 
 By default rust hids output from test executions. To show the output, add the flag -- --no capture
+
+### fs_read_to_string can be infeffecient
+
+I learned this around day5 by watching. (Impl rust: One Billion row challenge)[https://www.youtube.com/watch?v=tCY7p6dVAGE&t=2063s] and seeing that Jon uses a Buffread)
+
+[fs_read_to_string can be infeffecient](https://sowft.com/blog/optimizing-file-reading-in-rust-using-bufreader-for-large-files/)
+
+it reads the entire file into memory using read_to_string. For large files, this can lead to **high memory** usage and slow performance.
+
+The Solution: Use BufReader
+To optimize this code, we can use std::io::BufReader, which reads the file in chunks and allows us to process it line by line. This approach is much more memory-efficient, especially for large files.
+
+**NOTE** The way I do it is not efficient anyway, because at the end I still do .collect and pass the whole contents to the file to the AOC day{x}, where the logic for finding the solution is located. Instead of doing somethings lik reader.lines().execute logic.
+With reader.lines() we read a chunk of the file. and then execute logic on it, instead of rading the whole file. But for AOC I think I need the whole file anyway, otherwise I have to start looking ahead etc
