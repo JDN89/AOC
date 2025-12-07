@@ -1,8 +1,12 @@
 [package]
 name = "aoc_2024"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
-[dependencies]
-criterion = "0.8.1"
-regex = "1"
+# [lib]
+# name = "aoc_2024"
+# path = "src/lib.rs"
+
+[profile.release]
+debug = true        # keep DWARF info
+split-debuginfo = 'unpacked'  # optional, keeps symbols readable

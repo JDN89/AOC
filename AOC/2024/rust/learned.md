@@ -10,6 +10,9 @@ waarvoor de closure Some(value) teruggeeft.
 
 Ook wat bijgeleerd over prettierrc :p
 
+My program is to fast to time it. It finishes in microseconds. well as soon as
+it start to take longer i can start trying to use perf record and report!
+
 ## General
 
 By default rust hids output from test executions. To show the output, add the
