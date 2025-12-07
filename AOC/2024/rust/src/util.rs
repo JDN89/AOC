@@ -2,6 +2,5 @@ use std::fs::{self};
 
 /// Read the entire file into a single String
 pub fn read_input(path: &str) -> String {
-    let input = fs::read_to_string(path).expect("Failed to read file");
-    input
+    fs::read_to_string(path).unwrap_or_else(|_| panic!("Failed to read file at path: {}", path))
 }

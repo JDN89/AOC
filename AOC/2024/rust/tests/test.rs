@@ -7,10 +7,10 @@ fn read_test_input(day: &str) -> String {
 }
 
 #[test]
-fn test_day01_part1() {
+fn d1_p1() {
     let input = read_test_input("day01");
     let result = days::day01::part1(&input);
-    let expected = 1; // Replace with actual expected output
+    let expected = 11; // replace with actual expected output
     assert_eq!(result, expected);
 }
 
