@@ -1,6 +1,6 @@
 # Day 01
 
-#### test specific integration test
+## Test specific integration test
 
 --test name… Test the specified integration test. This flag may be specified
 multiple times and supports common Unix glob patterns.
@@ -13,12 +13,21 @@ Ook wat bijgeleerd over prettierrc :p
 My program is to fast to time it. It finishes in microseconds. well as soon as
 it start to take longer i can start trying to use perf record and report!
 
-## General
+[The competitive programmers handbook - rust Edition](https://book.micheletti.io/binary_search.html).
+Read through!
+
+## Compare debug vs release build
+
+hyperfine \
+ 'cargo run -- 01 p2' \
+ './target/release/aoc_2024 01 p2'
+
+# General
 
 By default rust hids output from test executions. To show the output, add the
 flag -- --no capture
 
-### fs_read_to_string can be infeffecient
+## fs_read_to_string can be infeffecient
 
 I learned this around day5 by watching. (Impl rust: One Billion row
 challenge)[https://www.youtube.com/watch?v=tCY7p6dVAGE&t=2063s] and seeing that

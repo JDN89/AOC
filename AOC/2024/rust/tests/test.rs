@@ -15,9 +15,9 @@ fn d1_p1() {
 }
 
 #[test]
-fn test_day01_part2() {
+fn d1_p2() {
     let input = read_test_input("day01");
     let result = days::day01::part2(&input);
-    let expected = 0; // Replace with actual expected output
+    let expected = 31; // Replace with actual expected output
     assert_eq!(result, expected);
 }

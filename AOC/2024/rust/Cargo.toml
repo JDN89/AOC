@@ -8,5 +8,13 @@ edition = "2021"
 # path = "src/lib.rs"
 
 [profile.release]
-debug = true        # keep DWARF info
+incremental = true
+debug = true
+lto = "fat"
 split-debuginfo = 'unpacked'  # optional, keeps symbols readable
+
+# [build]
+# rustflags = [
+#     "-C", "force-frame-pointers=yes",
+#     "-C", "symbol-mangling-version=v0"
+# ]
