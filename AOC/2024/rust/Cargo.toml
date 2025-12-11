@@ -9,12 +9,10 @@ edition = "2021"
 
 [profile.release]
 incremental = true
-debug = true
+debug = 1           # Include line table info
+strip = false       # Don't strip symbols
 lto = "fat"
 split-debuginfo = 'unpacked'  # optional, keeps symbols readable
 
-# [build]
-# rustflags = [
-#     "-C", "force-frame-pointers=yes",
-#     "-C", "symbol-mangling-version=v0"
-# ]
+[build]
+rustflags = ["-Csymbol-mangling-version=v0"]

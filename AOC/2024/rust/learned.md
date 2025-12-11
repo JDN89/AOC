@@ -16,13 +16,25 @@ it start to take longer i can start trying to use perf record and report!
 [The competitive programmers handbook - rust Edition](https://book.micheletti.io/binary_search.html).
 Read through!
 
+### demangling symbols
+
+[Switching to Rust's own mangling scheme on nightly](https://blog.rust-lang.org/2025/11/20/switching-to-v0-mangling-on-nightly/)
+
+### flamegraph
+
+call it with
+
+```
+cargo flamegraph -- 01 p2 // after -- come your arguments
+```
+
 ## Compare debug vs release build
 
 hyperfine \
  'cargo run -- 01 p2' \
  './target/release/aoc_2024 01 p2'
 
-# General
+## show STD in out output for test
 
 By default rust hids output from test executions. To show the output, add the
 flag -- --no capture
