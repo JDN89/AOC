@@ -34,6 +34,6 @@ fn d2_p1() {
 fn d2_p2() {
     let input = read_test_input("day02");
     let result = days::day02::part2(&input);
-    let expected = 31; // Replace with actual expected output
+    let expected = 4; // Replace with actual expected output
     assert_eq!(result, expected);
 }
