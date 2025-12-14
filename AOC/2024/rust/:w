@@ -17,23 +17,15 @@ pub fn part1(input: &str) -> i32 {
         for pair in report.windows(2) {
             // if diff is < 1 || >2 false
             let diff = (pair[1] - pair[0]).abs();
-            if diff > 3 || diff < 1 {
+            if diff > 2 || diff < 1 {
                 is_safe = false;
                 break;
             }
 
-            if is_increasing && pair[1] < pair[0] {
-                is_safe = false;
-                break;
-            }
-            if !is_increasing && pair[1] > pair[0] {
-                is_safe = false;
-                break;
-            }
-
-            is_safe = true
+            // if is_increasing en pair 1 < 0 -> false
+            // else true
         }
-        if is_safe {
+        if is_increasing {
             safe_reports += 1;
         }
     }
