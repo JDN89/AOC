@@ -16,3 +16,6 @@ split-debuginfo = 'unpacked'  # optional, keeps symbols readable
 
 [build]
 rustflags = ["-Csymbol-mangling-version=v0"]
+
+[dependencies]
+regex = "1.12.2"
