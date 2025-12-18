@@ -28,7 +28,7 @@ pub fn part1(input: &str) -> i32 {
         .map(|cap| {
             let nums: Vec<i32> = cap["nums"]
                 .split(',')
-                .filter_map(|n| n.parse::<i32>().ok())
+                .filter_map(|n| n.parse::<i32>().ok()) // NOTE: filter_map because .ok() converts a Result<T,E> into an Option!!!
                 .collect();
 
             (nums[0], nums[1])
