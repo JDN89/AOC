@@ -42,6 +42,46 @@ pub fn part1(input: &str) -> i32 {
 }
 
 //how many times does num appear in right list
+//Working regex: /(?<dont>don't\(\))|(?<operand>mul\((?<nums>\d+\,\d+)\))|(?<do>do\(\))/gm
 pub fn part2(input: &str) -> i32 {
-    2
+    let re = Regex::new(r"(?<dont>don't\(\))|(?<operand>mul\((?<nums>\d+\,\d+)\))|(?<do>do\(\))")
+        .unwrap();
+    let hay = input;
+    let it = re.captures_iter(hay);
+
+    enum Event {
+        Do,
+        Dont,
+        Mul(i32, i32),
+    }
+
+    let events: Vec<Event> = it
+        .filter_map(|cap| {
+            if cap.name("do").is_some() {
+                Some(Event::Do)
+            } else if cap.name("dont").is_some() {
+                Some(Event::Dont)
+            } else if let Some(nums_match) = cap.name("nums") {
+                let nums: Vec<i32> = nums_match
+                    .as_str()
+                    .split(',')
+                    .filter_map(|n| n.parse::<i32>().ok())
+                    .collect();
+                Some(Event::Mul(nums[0], nums[1]))
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    let total = events
+        .into_iter()
+        .fold((true, 0), |(enabled, acc), event| match event {
+            Event::Do => todo!(),
+            Event::Dont => todo!(),
+            Event::Mul(_, _) => todo!(),
+        })
+        .1;
+
+    0
 }
