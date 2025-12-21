@@ -53,3 +53,19 @@ fn d3_p2() {
     let expected = 48; // replace with actual expected output
     assert_eq!(result, expected);
 }
+
+#[test]
+fn d4_p1() {
+    let input = read_test_input("day04");
+    let result = days::day04::part1(&input);
+    let expected = 18; // replace with actual expected output
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn d4_p2() {
+    let input = read_test_input("day04");
+    let result = days::day04::part2(&input);
+    let expected = 9; // replace with actual expected output
+    assert_eq!(result, expected);
+}
