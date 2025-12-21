@@ -1,5 +1,3 @@
-use core::num;
-
 // place in tuple
 // zip, pairs ,sort, unzip and compare the distances
 use regex::Regex;
@@ -74,14 +72,18 @@ pub fn part2(input: &str) -> i32 {
         })
         .collect();
 
-    let total = events
+    events
         .into_iter()
         .fold((true, 0), |(enabled, acc), event| match event {
-            Event::Do => todo!(),
-            Event::Dont => todo!(),
-            Event::Mul(_, _) => todo!(),
+            Event::Do => (true, acc),
+            Event::Dont => (false, acc),
+            Event::Mul(a, b) => {
+                if enabled == true {
+                    (true, acc + a * b)
+                } else {
+                    (false, acc)
+                }
+            }
         })
-        .1;
-
-    0
+        .1
 }

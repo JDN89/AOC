@@ -45,3 +45,11 @@ fn d3_p1() {
     let expected = 161; // replace with actual expected output
     assert_eq!(result, expected);
 }
+
+#[test]
+fn d3_p2() {
+    let input = read_test_input("day03");
+    let result = days::day03::part2(&input);
+    let expected = 48; // replace with actual expected output
+    assert_eq!(result, expected);
+}
