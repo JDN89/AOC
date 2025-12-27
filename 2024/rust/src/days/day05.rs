@@ -1,10 +1,29 @@
 // place in tuple
 // zip, pairs ,sort, unzip and compare the distances
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+
+fn update_is_correct(updates_map: &HashMap<i32, HashSet<i32>>, sub_arr: &[i32], curr: i32) -> bool {
+    for &val in sub_arr {
+        match updates_map.get(&val) {
+            Some(set) => {
+                if set.contains(&curr) {
+                    return false;
+                }
+            }
+            None => {
+                // The fifth update, 61,13,29, is also not in the correct order, since it breaks the rule 29|13.
+                // 13 is not a key in my map, but can be present as a value in my map. only when it is not a key but it is a value should we return false
+                dbg!(val);
+            }
+        }
+    }
+    true
+}
 
 pub fn part1(input: &str) -> i32 {
-    let mut map: HashMap<i32, Vec<i32>> = HashMap::new();
+    let mut map: HashMap<i32, HashSet<i32>> = HashMap::new();
+    let mut mid_indexes: Vec<i32> = Vec::new();
     for line in input.lines() {
         if line.contains('|') {
             let instructions: Vec<i32> = line
@@ -14,30 +33,39 @@ pub fn part1(input: &str) -> i32 {
             if !instructions.is_empty() {
                 let key = instructions[0];
                 let value = instructions[1];
-                if map.contains_key(&key) {
-                    map.entry(key).or_insert_with(Vec::new).push(value);
-                } else {
-                    map.insert(key, Vec::new());
-                }
+                map.entry(key).or_insert_with(HashSet::new).insert(value);
             }
         }
         if line.contains(',') {
-            let mut set: Vec<i32> = line
+            let updates: Vec<i32> = line
                 .split(',')
                 .filter_map(|l| l.parse::<i32>().ok())
                 .collect();
-// use hashset
-// create counter set to 0
-// loop over value of udpates and copmaer with curr_value[counter]
-// see if in some of the folowing the cur value is present as a value in the key!, if so return the handle, ander blijf lopen en zet order_correct op true
-            set.reverse();
-            for key in set {
-                if
+            let mut updates_are_correct = true;
+            for (i, _update) in updates.iter().enumerate() {
+                let curr = updates[i];
+                let compare_with_values = &updates[(i + 1)..];
+                match update_is_correct(&map, compare_with_values, curr) {
+                    true => continue,
+                    false => {
+                        updates_are_correct = false;
+                        break;
+                    }
+                }
             }
+            if updates_are_correct {
+                let mid = updates.len() / 2;
+                mid_indexes.push(updates[mid]);
+            }
+
+            // use hashset
+            // create counter set to 0
+            // loop over value of udpates and copmaer with curr_value[counter]
+            // see if in some of the folowing the cur value is present as a value in the key!, if so return the handle, ander blijf lopen en zet order_correct op true
         }
     }
-    dbg!("| in {}", map.values());
-    0
+    dbg!(&mid_indexes);
+    mid_indexes.iter().sum()
 }
 
 //how many times does num appear in right list
