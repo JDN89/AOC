@@ -1,3 +1,27 @@
+# Day 05
+
+## running hyperfine correclty
+
+hyperfine -N --warmup 5 './target/release/aoc_2024 05 p1'
+
+```markdown
+rust on  main is 📦 v0.1.0 via 🦀 v1.92.0
+❯ hyperfine -N --warmup 5 './target/release/aoc_2024 05 p1'
+
+Benchmark 1: ./target/release/aoc_2024 05 p1
+  Time (mean ± σ):       3.3 ms ±   0.4 ms    [User: 1.9 ms, System: 1.2 ms]
+  Range (min … max):     1.9 ms …   4.4 ms    1227 runs
+
+  Warning: Statistical outliers were detected. Consider re-running this benchmark on a quiet system without any interferences from other programs. It might help to use the '--warmup' or '--prepare' options.
+```
+
+Alles onder 10ms is niet de moeite om te optimaliseren denk ik.
+
+## .entry api on hasmaps
+
+Combines checking of iets bestaat in de map en inserten van values (if exists), zoniet insert default value
+
+
 # Day 01
 
 ## Test specific integration test

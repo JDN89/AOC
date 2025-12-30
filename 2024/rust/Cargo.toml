@@ -3,19 +3,16 @@ name = "aoc_2024"
 version = "0.1.0"
 edition = "2021"
 
-# [lib]
-# name = "aoc_2024"
-# path = "src/lib.rs"
-
 [profile.release]
 incremental = true
-debug = 1           # Include line table info
-strip = false       # Don't strip symbols
+debug = 1
+strip = false
 lto = "fat"
-split-debuginfo = 'unpacked'  # optional, keeps symbols readable
-
-[build]
-rustflags = ["-Csymbol-mangling-version=v0"]
+split-debuginfo = "unpacked"
 
 [dependencies]
 regex = "1.12.2"
+
+[profile.dev]
+debug = true
+opt-level = 0

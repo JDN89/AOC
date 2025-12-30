@@ -33,8 +33,13 @@ fn main() {
             _ => None,
         },
         "05" => match part.as_str() {
-            "p2" => Some(days::day05::part2(&input)),
             "p1" => Some(days::day05::part1(&input)),
+            "p2" => Some(days::day05::part2(&input)),
+            _ => None,
+        },
+        "06" => match part.as_str() {
+            "p1" => Some(days::day06::part1(&input)),
+            "p2" => Some(days::day06::part2(&input)),
             _ => None,
         },
         // Add more days here

@@ -3,7 +3,29 @@
 
 use std::collections::{HashMap, HashSet};
 
-fn update_is_correct(updates_map: &HashMap<i32, HashSet<i32>>, sub_arr: &[i32], curr: i32) -> bool {
+fn order_udpates(
+    ordering_rules: &HashMap<i32, HashSet<i32>>,
+    unordered_page_updates: &mut Vec<i32>,
+) {
+    // sort by sorts in ascending order
+    //So if or ordering rule key (i) has as value (i+1) we have to make sure that i is in the beginnen of the array
+    // so ordering less, as we order in ascending order
+    unordered_page_updates.sort_by(|&a, &b| {
+        if ordering_rules.get(&a).map_or(false, |set| set.contains(&b)) {
+            std::cmp::Ordering::Less
+        } else if ordering_rules.get(&b).map_or(false, |set| set.contains(&a)) {
+            std::cmp::Ordering::Greater
+        } else {
+            std::cmp::Ordering::Equal
+        }
+    });
+}
+
+fn page_ordering_is_correct(
+    updates_map: &HashMap<i32, HashSet<i32>>,
+    sub_arr: &[i32],
+    curr: i32,
+) -> bool {
     for &val in sub_arr {
         match updates_map.get(&val) {
             Some(set) => {
@@ -26,26 +48,26 @@ pub fn part1(input: &str) -> i32 {
     let mut mid_indexes: Vec<i32> = Vec::new();
     for line in input.lines() {
         if line.contains('|') {
-            let instructions: Vec<i32> = line
+            let page_ordering_rules: Vec<i32> = line
                 .split('|')
                 .filter_map(|l| l.parse::<i32>().ok())
                 .collect();
-            if !instructions.is_empty() {
-                let key = instructions[0];
-                let value = instructions[1];
+            if !page_ordering_rules.is_empty() {
+                let key = page_ordering_rules[0];
+                let value = page_ordering_rules[1];
                 map.entry(key).or_insert_with(HashSet::new).insert(value);
             }
         }
         if line.contains(',') {
-            let updates: Vec<i32> = line
+            let page_updates: Vec<i32> = line
                 .split(',')
                 .filter_map(|l| l.parse::<i32>().ok())
                 .collect();
             let mut updates_are_correct = true;
-            for (i, _update) in updates.iter().enumerate() {
-                let curr = updates[i];
-                let compare_with_values = &updates[(i + 1)..];
-                match update_is_correct(&map, compare_with_values, curr) {
+            for (i, _update) in page_updates.iter().enumerate() {
+                let curr = page_updates[i];
+                let compare_with_values = &page_updates[(i + 1)..];
+                match page_ordering_is_correct(&map, compare_with_values, curr) {
                     true => continue,
                     false => {
                         updates_are_correct = false;
@@ -54,8 +76,8 @@ pub fn part1(input: &str) -> i32 {
                 }
             }
             if updates_are_correct {
-                let mid = updates.len() / 2;
-                mid_indexes.push(updates[mid]);
+                let mid = page_updates.len() / 2;
+                mid_indexes.push(page_updates[mid]);
             }
 
             // use hashset
@@ -70,36 +92,57 @@ pub fn part1(input: &str) -> i32 {
 
 //how many times does num appear in right list
 pub fn part2(input: &str) -> i32 {
-    let tuples: Vec<(i32, i32)> = input
-        .lines()
-        .filter_map(|line| {
-            let line_nums: Vec<i32> = line
-                .split_whitespace()
-                .filter_map(|x| x.parse::<i32>().ok())
+    let mut incorrect_page_updates: Vec<Vec<i32>> = Vec::new();
+    let mut page_update_rules: HashMap<i32, HashSet<i32>> = HashMap::new();
+    let mut mid_indexes: Vec<i32> = Vec::new();
+    for line in input.lines() {
+        if line.contains('|') {
+            let page_ordering_rules: Vec<i32> = line
+                .split('|')
+                .filter_map(|l| l.parse::<i32>().ok())
                 .collect();
-
-            if line_nums.len() >= 2 {
-                // wrap in Some, maar de Some wordt er door de filter_map van uit gefiltered
-                return Some((line_nums[0], line_nums[1]));
-            } else {
-                None
-            }
-        })
-        .collect();
-
-    let (mut left, mut right): (Vec<_>, Vec<_>) = tuples.into_iter().unzip();
-    left.sort();
-    right.sort();
-
-    //Raw approach. loop over both arrays and compar O N^2
-    // then stop shortly if it's bigger or smaller then
-    let mut result = 0;
-    for l_el in left.iter() {
-        for r_el in right.iter() {
-            if l_el == r_el {
-                result += l_el
+            if !page_ordering_rules.is_empty() {
+                let key = page_ordering_rules[0];
+                let value = page_ordering_rules[1];
+                page_update_rules
+                    .entry(key)
+                    .or_insert_with(HashSet::new)
+                    .insert(value);
             }
         }
+        if line.contains(',') {
+            let page_updates: Vec<i32> = line
+                .split(',')
+                .filter_map(|l| l.parse::<i32>().ok())
+                .collect();
+            for (i, _update) in page_updates.iter().enumerate() {
+                let curr = page_updates[i];
+                let compare_with_values = &page_updates[(i + 1)..];
+                match page_ordering_is_correct(&page_update_rules, compare_with_values, curr) {
+                    true => continue,
+                    false => {
+                        dbg!(&page_updates);
+                        // order the incorrect page update
+                        // order_udpates(&page_update_rules, &mut page_updates);
+                        incorrect_page_updates.push(page_updates.clone());
+
+                        // incorrect_page_updates.push(page_updates.clone()); // alternative was moving page updates out of the
+                        break;
+                    }
+                }
+            }
+
+            // use hashset
+            // create counter set to 0
+            // loop over value of udpates and copmaer with curr_value[counter]
+            // see if in some of the folowing the cur value is present as a value in the key!, if so return the handle, ander blijf lopen en zet order_correct op true
+        }
     }
-    result
+    for page in &mut incorrect_page_updates {
+        order_udpates(&page_update_rules, page);
+        let mid = page.len() / 2;
+        mid_indexes.push(page[mid]);
+    }
+    dbg!(&mid_indexes);
+    mid_indexes.iter().sum()
 }
