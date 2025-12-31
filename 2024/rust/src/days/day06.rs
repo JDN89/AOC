@@ -152,7 +152,7 @@ pub fn part1(input: &str) -> i32 {
 
     let cells: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     let mut grid: Grid<char> = Grid::new(cells);
-    println!("{grid}");
+    // println!("{grid}");
 
     let mut guard: Option<Guard> = None;
 
@@ -186,24 +186,24 @@ pub fn part1(input: &str) -> i32 {
             NextMove::GridEdge => {
                 guard.advance();
                 unique_visited_positions.insert((guard.position.0, guard.position.1));
-                dbg!("edge ");
-                print_grid_with_guard(&grid, &guard);
+                // dbg!("edge ");
+                // print_grid_with_guard(&grid, &guard);
                 break;
             }
             // BUG: obstacle does not work. When next move is obstacle the player doesn't recoginze it and moves over it!
             NextMove::Obstacle => {
                 guard.direction = guard.direction.turn();
 
-                dbg!("obstacle ");
-                print_grid_with_guard(&grid, &guard);
+                // dbg!("obstacle ");
+                // print_grid_with_guard(&grid, &guard);
                 // Advance is niet nodig, we draaien en doen dan weer een match op next position in onze loop
                 // guard.advance();
             }
             NextMove::Default => {
                 guard.advance();
                 unique_visited_positions.insert((guard.position.0, guard.position.1));
-                dbg!("default ");
-                print_grid_with_guard(&grid, &guard);
+                // dbg!("default ");
+                // print_grid_with_guard(&grid, &guard);
             }
             NextMove::Illegal => panic!("illegal move at guard position {:?}", guard.position),
         }
@@ -213,10 +213,78 @@ pub fn part1(input: &str) -> i32 {
     count
 }
 
+// read optimizing artcile in urst
+// cache if possible
+// parallellize with rayon
+//
+// FIRST idead the unique visited positions must be the same for part I and II.
+// So loop over the poisitions
+// place a blocade on each position
+// recalculate and see if we encounter a loop
+// if no loop you reach the edge -> break
 pub fn part2(input: &str) -> i32 {
-    let cells: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
-    let grid: Grid<char> = Grid::new(cells);
-    println!("{grid}");
 
-    2
+    let mut unique_visited_positions: HashSet<(i32, i32)> = HashSet::new();
+
+    let cells: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+    let mut grid: Grid<char> = Grid::new(cells);
+    // println!("{grid}");
+
+    let mut guard: Option<Guard> = None;
+
+    // named outer loop so we can break out of it from the inner loop
+    'outer: for (y, row) in grid.cells.iter().enumerate() {
+        for (x, cell) in row.iter().enumerate() {
+            if DIRECTION_CHAR.contains(&cell) {
+                let direction = Direction::start_direction(cell);
+                guard = Some(Guard::new(direction, (x as i32, y as i32)));
+
+                match grid.get_mut(x as isize, y as isize) {
+                    // Overwrite the cell value once we found the starting position of the guard
+                    Some(val) => *val = '.',
+                    None => {}
+                }
+                break 'outer;
+
+                // dbg!(direction);
+                // dbg!(direction.delta());
+            }
+        }
+    }
+    let mut guard = guard.expect("No guard found!");
+
+    // Insert the strting position of the guard
+    // unique_visited_positions.insert((guard.position.0, guard.position.1, guard.direction));
+    unique_visited_positions.insert((guard.position.0, guard.position.1));
+
+    loop {
+        match guard.peek_move(&grid) {
+            NextMove::GridEdge => {
+                guard.advance();
+                unique_visited_positions.insert((guard.position.0, guard.position.1));
+                // dbg!("edge ");
+                // print_grid_with_guard(&grid, &guard);
+                break;
+            }
+            // BUG: obstacle does not work. When next move is obstacle the player doesn't recoginze it and moves over it!
+            NextMove::Obstacle => {
+                guard.direction = guard.direction.turn();
+
+                // dbg!("obstacle ");
+                // print_grid_with_guard(&grid, &guard);
+                // Advance is niet nodig, we draaien en doen dan weer een match op next position in onze loop
+                // guard.advance();
+            }
+            NextMove::Default => {
+                guard.advance();
+                unique_visited_positions.insert((guard.position.0, guard.position.1));
+                // dbg!("default ");
+                // print_grid_with_guard(&grid, &guard);
+            }
+            NextMove::Illegal => panic!("illegal move at guard position {:?}", guard.position),
+        }
+    }
+
+    let count = unique_visited_positions.len() as i32;
+    count
 }

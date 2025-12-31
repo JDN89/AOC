@@ -1,3 +1,11 @@
+# Day 06
+
+Ik ben mijn data meer beginnen opdelen in structs en enums. Ook ben ik vaker enums gaan gebruiken om de verschillende bewegingen die een guard kan maken op te splitsen. Door te matchen op deze enum-states kan ik de logica duidelijker structureren, en zo werd de code ook veel overzichtelijker.
+
+Ik ben dit nog niet echt gewoon — werken met enums en state machines — maar ik merk dat het de logica én de leesbaarheid sterk verbetert. Daarom wil ik dit ook meer beginnen toepassen op mijn werk.
+
+Deel 1 van dag 6 was niet zo moeilijk. Eens je de rust syntax wat gewoon bent gaat het iet wat vooruit, maar ben er toch redelijk lang nog mee bezig geweest, omdat ik nog vaal de syntax en de verschillende methodes moet raadplegen.
+
 # Day 05
 
 ## running hyperfine correclty
