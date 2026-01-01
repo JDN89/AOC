@@ -244,6 +244,10 @@ pub fn part2(input: &str) -> i32 {
     let mut unique_visited_positions: HashSet<(i32, i32)> = HashSet::new();
     let mut unique_visited_positions_and_direction: HashSet<(i32, i32, Direction)> = HashSet::new();
 
+    // TODO turn into option
+    let mut start_position: Option<(i32, i32)> = None;
+    let mut start_direction: Option<Direction> = None;
+
     let cells: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     let mut grid: Grid<char> = Grid::new(cells);
     // println!("{grid}");
@@ -256,6 +260,8 @@ pub fn part2(input: &str) -> i32 {
             if DIRECTION_CHAR.contains(&cell) {
                 let direction = Direction::start_direction(cell);
                 guard = Some(Guard::new(direction, (x as i32, y as i32)));
+                start_position = Some((x as i32, y as i32));
+                start_direction = Some(direction);
 
                 match grid.get_mut(x as isize, y as isize) {
                     // Overwrite the cell value once we found the starting position of the guard
@@ -300,7 +306,12 @@ pub fn part2(input: &str) -> i32 {
     }
 
     let mut loop_counter = 0;
+
     for position in unique_visited_positions {
+        // which each loop reset the guard his start position and direction
+        reset_grid(position, &mut grid);
+        guard.position = start_position.unwrap();
+        guard.direction = start_direction.unwrap();
         // TODO this part can be paralellezide with rayon
         // ALSO see if i can cache some things??!!
 
@@ -316,7 +327,7 @@ pub fn part2(input: &str) -> i32 {
                         guard.position.1,
                         guard.direction,
                     ));
-                    // dbg!("edge ");
+                    dbg!("edge ");
                     // print_grid_with_guard(&grid, &guard);
                     break;
                 }
@@ -341,13 +352,12 @@ pub fn part2(input: &str) -> i32 {
                         guard.position.1,
                         guard.direction,
                     ));
-                    // dbg!("default ");
+                    dbg!("default ");
                     // print_grid_with_guard(&grid, &guard);
                 }
                 NextMove::Illegal => panic!("illegal move at guard position {:?}", guard.position),
             }
         }
-        reset_grid(position, &mut grid);
         // TODO reset grid (remove obstacle)
     }
     0
