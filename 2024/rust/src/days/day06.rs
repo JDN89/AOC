@@ -141,6 +141,7 @@ impl Direction {
         match self {
             Direction::Up => '^',
             Direction::Down => 'v',
+
             Direction::Left => '<',
             Direction::Right => '>',
         }
@@ -152,7 +153,6 @@ pub fn part1(input: &str) -> i32 {
 
     let cells: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     let mut grid: Grid<char> = Grid::new(cells);
-    // println!("{grid}");
 
     let mut guard: Option<Guard> = None;
 
@@ -213,44 +213,28 @@ pub fn part1(input: &str) -> i32 {
     count
 }
 
-fn check_loop_found(
-    guard: &Guard,
-    unique_visited_positions_and_direction: &HashSet<(i32, i32, Direction)>,
-) -> bool {
-    unique_visited_positions_and_direction.contains(&(
-        guard.position.0,
-        guard.position.1,
-        guard.direction,
-    ))
-}
-
-fn reset_grid(position: (i32, i32), grid: &mut Grid<char>) {
-    grid.cells[position.0 as usize][position.1 as usize] = DEFAULT;
-}
-
 fn add_obstacle(position: (i32, i32), grid: &mut Grid<char>) {
-    grid.cells[position.0 as usize][position.1 as usize] = OBSTACLE;
+    let (x, y) = position;
+    grid.cells[y as usize][x as usize] = OBSTACLE;
 }
 // read optimizing artcile in urst
 // cache if possible
 // parallellize with rayon
 //
 // FIRST idead the unique visited positions must be the same for part I and II.
-// So loop over the poisitions
-// place a blocade on each position
+// So loop over the unique visisted positions with the clean run
+// place a blocade on each unique visited position
 // recalculate and see if we encounter a loop
 // if no loop you reach the edge -> break
 pub fn part2(input: &str) -> i32 {
     let mut unique_visited_positions: HashSet<(i32, i32)> = HashSet::new();
     let mut unique_visited_positions_and_direction: HashSet<(i32, i32, Direction)> = HashSet::new();
 
-    // TODO turn into option
     let mut start_position: Option<(i32, i32)> = None;
     let mut start_direction: Option<Direction> = None;
 
     let cells: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     let mut grid: Grid<char> = Grid::new(cells);
-    // println!("{grid}");
 
     let mut guard: Option<Guard> = None;
 
@@ -268,16 +252,18 @@ pub fn part2(input: &str) -> i32 {
                     Some(val) => *val = '.',
                     None => {}
                 }
-                break 'outer;
 
-                // dbg!(direction);
-                // dbg!(direction.delta());
+                break 'outer;
             }
         }
     }
     let mut guard = guard.expect("No guard found!");
+    // At this point we have the base grid and we can replace the starting pos of the guard with '.'.
+    // If we leave the starting position we run into an error,
+    // because we don't recognize the directon symbols in our movememnt state logic
+    let base_grid = grid.clone();
 
-    // Insert the strting position of the guard
+    // Insert the starting position of the guard
     // unique_visited_positions.insert((guard.position.0, guard.position.1, guard.direction));
     unique_visited_positions.insert((guard.position.0, guard.position.1));
 
@@ -286,20 +272,14 @@ pub fn part2(input: &str) -> i32 {
             NextMove::GridEdge => {
                 guard.advance();
                 unique_visited_positions.insert((guard.position.0, guard.position.1));
-                // dbg!("edge ");
-                // print_grid_with_guard(&grid, &guard);
                 break;
             }
-            // NOTE: We can check earlier but I will only check at the obstacle if the current position plus direction is allready present in the set.
-            // Maybe we can dectect ealier, but if feel at obstacle should be enough
             NextMove::Obstacle => {
                 guard.direction = guard.direction.turn();
             }
             NextMove::Default => {
                 guard.advance();
                 unique_visited_positions.insert((guard.position.0, guard.position.1));
-                // dbg!("default ");
-                // print_grid_with_guard(&grid, &guard);
             }
             NextMove::Illegal => panic!("illegal move at guard position {:?}", guard.position),
         }
@@ -309,56 +289,62 @@ pub fn part2(input: &str) -> i32 {
 
     for position in unique_visited_positions {
         // which each loop reset the guard his start position and direction
-        reset_grid(position, &mut grid);
+        let mut grid = base_grid.clone();
+
+        unique_visited_positions_and_direction.clear();
+
         guard.position = start_position.unwrap();
         guard.direction = start_direction.unwrap();
-        // TODO this part can be paralellezide with rayon
-        // ALSO see if i can cache some things??!!
 
-        dbg!(position);
+        // record initial state
+        unique_visited_positions_and_direction.insert((
+            guard.position.0,
+            guard.position.1,
+            guard.direction,
+        ));
+
         add_obstacle(position, &mut grid);
+
         loop {
             // BUG: guard his position needs to be reseet to his start position!!
             match guard.peek_move(&grid) {
                 NextMove::GridEdge => {
                     guard.advance();
-                    unique_visited_positions_and_direction.insert((
-                        guard.position.0,
-                        guard.position.1,
-                        guard.direction,
-                    ));
-                    dbg!("edge ");
-                    // print_grid_with_guard(&grid, &guard);
+                    let state = (guard.position.0, guard.position.1, guard.direction);
+
+                    if !unique_visited_positions_and_direction.insert(state) {
+                        loop_counter += 1;
+                    }
+
                     break;
                 }
                 // NOTE: We can check earlier but I will only check at the obstacle if the current position plus direction is allready present in the set.
                 // Maybe we can dectect ealier, but if feel at obstacle should be enough
                 NextMove::Obstacle => {
-                    // Insert turn with position and direction
                     guard.direction = guard.direction.turn();
-                    match check_loop_found(&guard, &unique_visited_positions_and_direction) {
-                        true => {
-                            dbg!("Loop found!");
-                        }
-                        false => continue,
-                    }
 
-                    // TODO check if we allready encountered this position and turn
+                    let state = (guard.position.0, guard.position.1, guard.direction);
+
+                    if !unique_visited_positions_and_direction.insert(state) {
+                        // already existed → loop
+                        loop_counter += 1;
+                        break;
+                    }
                 }
+
                 NextMove::Default => {
                     guard.advance();
-                    unique_visited_positions_and_direction.insert((
-                        guard.position.0,
-                        guard.position.1,
-                        guard.direction,
-                    ));
-                    dbg!("default ");
-                    // print_grid_with_guard(&grid, &guard);
+                    let state = (guard.position.0, guard.position.1, guard.direction);
+
+                    if !unique_visited_positions_and_direction.insert(state) {
+                        loop_counter += 1;
+                        break;
+                    }
                 }
                 NextMove::Illegal => panic!("illegal move at guard position {:?}", guard.position),
             }
         }
         // TODO reset grid (remove obstacle)
     }
-    0
+    loop_counter
 }

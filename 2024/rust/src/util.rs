@@ -8,6 +8,7 @@ pub fn read_input(path: &str) -> String {
     fs::read_to_string(path).unwrap_or_else(|_| panic!("Failed to read file at path: {}", path))
 }
 
+#[derive(Clone)]
 pub struct Grid<T> {
     pub cells: Vec<Vec<T>>,
     height: usize,
