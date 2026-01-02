@@ -3,7 +3,6 @@
 ## Pre Optimization
 
 ```
-AOC/2024/rust on  main [✘!?] is 📦 v0.1.0 via 🦀 v1.92.0 took 19m22s
 ❯ hyperfine -N --warmup 5 './target/release/aoc_2024 06 p2'
 Benchmark 1: ./target/release/aoc_2024 06 p2
   Time (mean ± σ):     363.1 ms ±   5.2 ms    [User: 360.1 ms, System: 2.0 ms]
@@ -11,6 +10,21 @@ Benchmark 1: ./target/release/aoc_2024 06 p2
 ```
 
 ### Remove grid.clone()
+
+```
+❯ hyperfine -N --warmup 5 './target/release/aoc_2024 06 p2'
+Benchmark 1: ./target/release/aoc_2024 06 p2
+  Time (mean ± σ):     335.5 ms ±   4.6 ms    [User: 333.4 ms, System: 1.0 ms]
+  Range (min … max):   329.4 ms … 345.3 ms    10 runs
+
+```
+
+### use 3d vec to search visited poisitions instead of hashSet
+also create is_loop helper function allready
+vec [y][x][d] d is false 4 times with init
+let mut visited = vec![vec![[false; 4]; width]; height];
+
+### Use rayon
 
 ## Optimization Ideas
 

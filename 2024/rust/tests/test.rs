@@ -98,6 +98,6 @@ fn d6_p1() {
 fn d6_p2() {
     let input = read_test_input("day06");
     let result = days::day06::part2(&input);
-    let expected = 41; // Replace with actual expected output
+    let expected = 6; // Replace with actual expected output
     assert_eq!(result, expected);
 }
