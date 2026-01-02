@@ -1,5 +1,17 @@
 # Day 06
 
+## OPTIMIZE TODO
+
+- get rid of .clone. voeg reset logica toe
+- use array instead of hasset (3d array) index, col, visited
+- rayon
+- memoize 
+- try to use perf to see how fast this soluton is.
+
+add markdown linter prettierrc
+
+------
+
 Ik ben mijn data meer beginnen opdelen in structs en enums. Ook ben ik vaker enums gaan gebruiken om de verschillende bewegingen die een guard kan maken op te splitsen. Door te matchen op deze enum-states kan ik de logica duidelijker structureren, en zo werd de code ook veel overzichtelijker.
 
 Ik ben dit nog niet echt gewoon — werken met enums en state machines — maar ik merk dat het de logica én de leesbaarheid sterk verbetert. Daarom wil ik dit ook meer beginnen toepassen op mijn werk.
