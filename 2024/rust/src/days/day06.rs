@@ -14,6 +14,8 @@ leaves the mapped area.
 
 use std::collections::HashSet;
 
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+
 use crate::util::Grid;
 
 // Characters that indicate the guard's starting direction
@@ -335,7 +337,7 @@ pub fn part2(input: &str) -> i32 {
     }
 
 
-    let loop_counter: usize = unique_visited_positions        .iter()
+    let loop_counter: usize = unique_visited_positions        .par_iter()
         .map(|&pos| {
             if causes_loop(pos, &grid, start_position.unwrap(), start_direction.unwrap()) {
                 1

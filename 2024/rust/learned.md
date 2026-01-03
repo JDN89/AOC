@@ -47,6 +47,17 @@ BIG DIFF
 
 ### Use rayon
 
+Rayon was super simpel om te gebruiken.
+Je moet de loop die je wil parallelizeren immutable maken of. Ik denk dat dit ook is om te voorkomen dat de verschillende threads elkaars state manipuleren. Plus, ook om dirty cache lines etc, te voorkomen die de effectiviteit van rayon ongedaan zouden maken.
+
+De threads zouden elkaars chache lines kunnen invalidaren op die manier. Als de state mutable is kunnen de threads misschien elkaars state zien, en dan heb je een soort van lock nodig die de data even vastpint wat het weer trager maakt
+
+```
+❯ hyperfine -N --warmup 5 './target/release/aoc_2024 06 p2'
+Benchmark 1: ./target/release/aoc_2024 06 p2
+  Time (mean ± σ):      20.5 ms ±   1.5 ms    [User: 194.3 ms, System: 5.2 ms]
+```
+
 ## Optimization Ideas
 
 Potential improvements to explore once correctness is locked in:
