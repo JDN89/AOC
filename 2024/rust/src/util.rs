@@ -11,8 +11,8 @@ pub fn read_input(path: &str) -> String {
 #[derive(Clone)]
 pub struct Grid<T> {
     pub cells: Vec<Vec<T>>,
-    height: usize,
-    width: usize,
+    pub height: usize,
+    pub width: usize,
 }
 
 impl<T> Grid<T> {

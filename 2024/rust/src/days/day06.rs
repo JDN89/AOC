@@ -22,21 +22,6 @@ const DIRECTION_CHAR: [char; 4] = ['<', '>', '^', 'v'];
 const OBSTACLE: char = '#';
 const DEFAULT: char = '.';
 
-// Debug helper: prints the grid with the guard rendered at its current position
-fn print_grid_with_guard(grid: &Grid<char>, guard: &Guard) {
-    println!("New move:\n");
-    for (y, row) in grid.cells.iter().enumerate() {
-        for (x, cell) in row.iter().enumerate() {
-            if guard.position == (x as i32, y as i32) {
-                print!("{}", guard.direction.as_char());
-            } else {
-                print!("{cell}");
-            }
-        }
-        println!();
-    }
-    println!();
-}
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum NextMove {
@@ -59,7 +44,35 @@ impl Guard {
             position: pos,
         }
     }
+    #[inline]
+        fn peek_move_with_extra_obstacle(
+            &self,
+            grid: &Grid<char>,
+            extra_obstacle: (i32, i32),
+        ) -> NextMove {
+            let (nx, ny) = self.next_position();
 
+            // grid edge
+            if ny < 0
+                || nx < 0
+                || ny >= grid.cells.len() as i32
+                || nx >= grid.cells[0].len() as i32
+            {
+                return NextMove::GridEdge;
+            }
+
+            // virtual obstacle check FIRST
+            if (nx, ny) == extra_obstacle {
+                return NextMove::Obstacle;
+            }
+
+            // real grid obstacle
+            match grid.cells[ny as usize][nx as usize] {
+                '#' => NextMove::Obstacle,
+                '.' => NextMove::Default,
+                _ => NextMove::Illegal,
+            }
+        }
     // Returns the next position without updating the guard state
     fn next_position(&self) -> (i32, i32) {
         let (dx, dy) = self.direction.delta();
@@ -145,16 +158,51 @@ impl Direction {
         }
     }
 
-    fn as_char(&self) -> char {
-        match self {
-            Direction::Up => '^',
-            Direction::Down => 'v',
-            Direction::Left => '<',
-            Direction::Right => '>',
-        }
-    }
 }
 
+
+fn causes_loop(
+    obstacle: (i32, i32),
+    grid: &Grid<char>,
+    start_pos: (i32, i32),
+    start_dir: Direction,
+) -> bool {
+    let height = grid.cells.len();
+    let width = grid.cells[0].len();
+
+    let mut visited = vec![vec![[false; 4]; width]; height];
+
+    let mut guard = Guard::new(start_dir, start_pos);
+
+    // mark initial state
+    visited[start_pos.1 as usize][start_pos.0 as usize][start_dir.idx()] = true;
+
+    loop {
+        match guard.peek_move_with_extra_obstacle(grid, obstacle) {
+            NextMove::GridEdge => return false,
+
+            NextMove::Obstacle => {
+                guard.direction = guard.direction.turn();
+            }
+
+            NextMove::Default => {
+                guard.advance();
+            }
+
+            NextMove::Illegal => unreachable!(),
+        }
+
+        let x = guard.position.0 as usize;
+        let y = guard.position.1 as usize;
+        let d = guard.direction.idx();
+
+        if visited[y][x][d] {
+            return true; // loop detected
+        }
+
+        visited[y][x][d] = true;
+    }
+}
 pub fn part1(input: &str) -> i32 {
     let mut unique_visited_positions: HashSet<(i32, i32)> = HashSet::new();
 
@@ -206,25 +254,36 @@ pub fn part1(input: &str) -> i32 {
     unique_visited_positions.len() as i32
 }
 
-fn add_obstacle(position: (i32, i32), grid: &mut Grid<char>) {
-    let (x, y) = position;
-    grid.cells[y as usize][x as usize] = OBSTACLE;
+
+fn mark_visited(
+    (x, y): (i32, i32),
+    visited: &mut Vec<Vec<bool>>,
+    positions: &mut Vec<(i32, i32)>,
+) {
+    let (x, y) = (x as usize, y as usize);
+    if !visited[y][x] {
+        visited[y][x] = true;
+        positions.push((x as i32, y as i32));
+    }
 }
 
-fn remove_obstacle(position: (i32, i32), grid: &mut Grid<char>) {
-    let (x, y) = position;
-    grid.cells[y as usize][x as usize] = DEFAULT;
-}
 
 pub fn part2(input: &str) -> i32 {
-    let mut unique_visited_positions: HashSet<(i32, i32)> = HashSet::new();
-    let mut visited_states: HashSet<(i32, i32, Direction)> = HashSet::new();
+
+    // let mut unique_visited_positions: HashSet<(i32, i32)> = HashSet::new();
+    // let mut visited_states: HashSet<(i32, i32, Direction)> = HashSet::new();
 
     let mut start_position = None;
     let mut start_direction = None;
 
     let cells: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     let mut grid: Grid<char> = Grid::new(cells);
+
+    //Set everything to false, if visited set to true;
+    // Faster to index, we won't have the HashSet overhead off hash, store, find,...
+    // O(1) indexing
+    let mut visited_grid: Vec<Vec<bool>> = vec![vec![false;grid.width];grid.height];
+    let mut unique_visited_positions: Vec<(i32,i32)> = Vec::new();
 
     let mut guard: Option<Guard> = None;
 
@@ -248,16 +307,17 @@ pub fn part2(input: &str) -> i32 {
     }
 
     let mut guard = guard.expect("No guard found");
-    // let base_grid = grid.clone();
 
-    unique_visited_positions.insert(guard.position);
+    mark_visited(guard.position, &mut visited_grid, &mut unique_visited_positions);
 
-    // First run: collect all visited positions
+    // First run: collect all unique visited positions
     loop {
         match guard.peek_move(&grid) {
             NextMove::GridEdge => {
                 guard.advance();
-                unique_visited_positions.insert(guard.position);
+
+                mark_visited(guard.position, &mut visited_grid, &mut unique_visited_positions);
+
                 break;
             }
             NextMove::Obstacle => {
@@ -265,59 +325,26 @@ pub fn part2(input: &str) -> i32 {
             }
             NextMove::Default => {
                 guard.advance();
-                unique_visited_positions.insert(guard.position);
+
+                mark_visited(guard.position, &mut visited_grid, &mut unique_visited_positions);
+
+
             }
             NextMove::Illegal => panic!("Illegal move at {:?}", guard.position),
         }
     }
 
-    let mut loop_counter = 0;
 
-    // Try adding an obstacle at each visited position
-    for position in unique_visited_positions {
-        // let mut grid = base_grid.clone();
-
-        visited_states.clear();
-
-        guard.position = start_position.unwrap();
-        guard.direction = start_direction.unwrap();
-
-        // TODO replace by 3d vec [y][x][d]
-        visited_states.insert((guard.position.0, guard.position.1, guard.direction));
-        add_obstacle(position, &mut grid);
-
-        loop {
-            // TODO: change to peek move with extra obstacle -> so we don't have to overwrite and reset the grid each time
-            match guard.peek_move(&grid) {
-                NextMove::GridEdge => {
-                    guard.advance();
-                    let state = (guard.position.0, guard.position.1, guard.direction);
-                    if !visited_states.insert(state) {
-                        loop_counter += 1;
-                    }
-                    break;
-                }
-                NextMove::Obstacle => {
-                    guard.direction = guard.direction.turn();
-                    let state = (guard.position.0, guard.position.1, guard.direction);
-                    if !visited_states.insert(state) {
-                        loop_counter += 1;
-                        break;
-                    }
-                }
-                NextMove::Default => {
-                    guard.advance();
-                    let state = (guard.position.0, guard.position.1, guard.direction);
-                    if !visited_states.insert(state) {
-                        loop_counter += 1;
-                        break;
-                    }
-                }
-                NextMove::Illegal => panic!("Illegal move at {:?}", guard.position),
+    let loop_counter: usize = unique_visited_positions        .iter()
+        .map(|&pos| {
+            if causes_loop(pos, &grid, start_position.unwrap(), start_direction.unwrap()) {
+                1
+            } else {
+                0
             }
-        }
-        remove_obstacle(position, &mut grid);
-    }
+        })
+        .sum();
 
-    loop_counter
+    loop_counter as i32
+
 }

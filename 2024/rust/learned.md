@@ -24,6 +24,27 @@ also create is_loop helper function allready
 vec [y][x][d] d is false 4 times with init
 let mut visited = vec![vec![[false; 4]; width]; height];
 
+We can index quickly into the vec. HashSet is also fast, but we have to hash the key, look for conflicts and resolve them, plus the data is more spread out then in a regulare vec,... all this causes some extra overhead compared to the just indexing into the vec. 
+
+Also no longer add and remove obstacles with each loop (mutate the grid). Per loop just pass the location of the obstacle.
+
+__Mutating the grid makes cache lines cold because:__
+- Writes force exclusive ownership
+- Cache lines become dirty
+- Dirty lines are expensive to evict
+- Cache pollution increases
+- Read-only reuse is destroyed
+
+THE CPU loves immutable data, remember this for the next days!!
+
+```
+❯ hyperfine -N --warmup 5 './target/release/aoc_2024 06 p2'
+Benchmark 1: ./target/release/aoc_2024 06 p2
+  Time (mean ± σ):      72.9 ms ±   1.4 ms    [User: 71.3 ms, System: 1.2 ms]
+  Range (min … max):    71.2 ms …  79.1 ms    37 runs
+```
+BIG DIFF
+
 ### Use rayon
 
 ## Optimization Ideas
