@@ -101,3 +101,19 @@ fn d6_p2() {
     let expected = 6; // Replace with actual expected output
     assert_eq!(result, expected);
 }
+
+#[test]
+fn d7_p1() {
+    let input = read_test_input("day07");
+    let result = days::day07::part1(&input);
+    let expected = 3749; // Replace with actual expected output
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn d7_p2() {
+    let input = read_test_input("day07");
+    let result = days::day07::part2(&input);
+    let expected = 6; // Replace with actual expected output
+    assert_eq!(result, expected);
+}

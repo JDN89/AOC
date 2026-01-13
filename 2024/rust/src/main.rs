@@ -42,6 +42,11 @@ fn main() {
             "p2" => Some(days::day06::part2(&input)),
             _ => None,
         },
+        "07" => match part.as_str() {
+            "p1" => Some(days::day07::part1(&input)),
+            "p2" => Some(days::day07::part2(&input)),
+            _ => None,
+        },
         // Add more days here
         _ => None,
     };
