@@ -39,11 +39,11 @@ def part2(data: str) -> int:
 
     pairs = [map(int, line.split()) for line in data.splitlines()]
     left, right = zip(*pairs)
-    list1: list[int] = sorted(left)
-    list2: list[int] = sorted(right)
+    # list1: list[int] = sorted(left)
+    # list2: list[int] = sorted(right)
     total = 0
-    for n in list1:
-        for y in list2:
+    for n in left:
+        for y in right:
             if n == y:
                 total = total + y
     return total
