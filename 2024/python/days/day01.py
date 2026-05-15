@@ -35,4 +35,15 @@ def part1(data: str) -> int:
 
 def part2(data: str) -> int:
 
-    return 1
+    # encountered = {}
+
+    pairs = [map(int, line.split()) for line in data.splitlines()]
+    left, right = zip(*pairs)
+    list1: list[int] = sorted(left)
+    list2: list[int] = sorted(right)
+    total = 0
+    for n in list1:
+        for y in list2:
+            if n == y:
+                total = total + y
+    return total
