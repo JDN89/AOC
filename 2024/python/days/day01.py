@@ -1,3 +1,5 @@
+from collections import Counter
+
 from rich import print
 
 
@@ -41,9 +43,6 @@ def part2(data: str) -> int:
     left, right = zip(*pairs)
     # list1: list[int] = sorted(left)
     # list2: list[int] = sorted(right)
-    total = 0
-    for n in left:
-        for y in right:
-            if n == y:
-                total = total + y
-    return total
+    # dict {number : number_of_times_appears_in_collection}
+    counts = Counter(right)
+    return sum(n * counts[n] for n in left)
