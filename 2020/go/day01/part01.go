@@ -2,7 +2,6 @@ package day01
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -23,12 +22,8 @@ import (
 // bucket[idx] != nill -> multiply
 // else insert in bucket
 
-func Part1() int {
-	data, err := os.ReadFile("day01/input.txt")
-	if err != nil {
-		panic(err)
-	}
-	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+func Part1(input string) int {
+	lines := strings.Split(strings.TrimSpace(input), "\n")
 
 	bucket := [2020]bool{}
 
