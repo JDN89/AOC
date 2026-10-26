@@ -18,7 +18,9 @@ func main() {
 		panic(err)
 	}
 
-	result := day01.Part1(string(input))
+	d1p1 := day01.Part1(string(input))
+	d1p2 := day01.Part2(string(input))
 
-	fmt.Println(result)
+	fmt.Println(d1p1)
+	fmt.Println(d1p2)
 }
