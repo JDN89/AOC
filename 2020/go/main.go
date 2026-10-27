@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"aoc/day01"
+	"aoc/day02"
 )
 
 func main() {
@@ -20,6 +21,7 @@ func main() {
 
 	d1p1 := day01.Part1(string(input))
 	d1p2 := day01.Part2(string(input))
+	d2p1 := day02.Part1(string(input))
 
 	fmt.Println(d1p1)
 	fmt.Println(d1p2)
